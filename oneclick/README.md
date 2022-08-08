@@ -2,18 +2,19 @@
 
 This repository contains the oneclick automation that can be used to deploy the Dataplex demo.
 
-There are two terraform projects (as required by the go/demos format):
-|org_policy | <BR>
-| :- org_policy.tf | <BR>
-| :- variables.tf |<BR>
-| :- versions.tf |<BR>
-| demo |<BR>
-| :- terraform | <BR>
-| :-- main.tf | <BR>
-| :-- variables.tf |<BR>
-| :-- versions.tf |<BR>
-| :-- modules |<BR>
-
+<pre>
+There are two terraform projects (as required by the go/demos format):<BR>
+|org_policy | 
+| :- org_policy.tf | 
+| :- variables.tf |
+| :- versions.tf |
+| demo |
+| :- terraform | 
+| :-- main.tf | 
+| :-- variables.tf |
+| :-- versions.tf |
+| :-- modules |
+</pre>
 
 ## Before running terraform:
 If you are using Cloud Shell, you can skip to the next step.  If not, do the following:
