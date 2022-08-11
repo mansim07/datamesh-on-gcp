@@ -239,7 +239,6 @@ module "composer" {
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
-/*
 module "stage_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/stage_data"
@@ -255,11 +254,10 @@ module "stage_data" {
   dataplex_process_bucket_name  = local._dataplex_process_bucket_name
   depends_on = [null_resource.dataproc_metastore]
 }
-*/
+
 ####################################################################################
 # Organize the Data
 ####################################################################################
-/*
 module "organize_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                 = "./modules/organize_data"
@@ -271,11 +269,10 @@ module "organize_data" {
   depends_on = [module.stage_data]
 
 }
-*/
+
 ####################################################################################
 # Register the Data Assets in Dataplex
 ####################################################################################
-/*
 module "register_assets" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/register_assets"
@@ -289,7 +286,7 @@ module "register_assets" {
   depends_on = [module.organize_data]
 
 }
-*/
+
 
 /*
 ####################################################################################
