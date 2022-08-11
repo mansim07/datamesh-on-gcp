@@ -17,6 +17,13 @@ There are two terraform projects (as required by the go/demos format):<BR>
 </pre>
 
 ## Before running terraform:
+1. clone this repository in Cloud Shell (git clone https://github.com/mansim07/datamesh-on-gcp)
+2. install necessary python libraries
+    * pip3 install google-cloud-storage
+    * pip3 install numpy
+    * pip3 install faker_credit_score 
+
+## Authentication (if necessary):
 If you are using Cloud Shell, you can skip to the next step.  If not, do the following:
 
 - Run: gcloud auth application-default login

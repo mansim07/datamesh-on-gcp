@@ -40,7 +40,8 @@ module "activate_service_apis" {
     "metastore.googleapis.com",
     "dataplex.googleapis.com",
     "datacatalog.googleapis.com",
-    "cloudresourcemanager.googleapis.com"  
+    "cloudresourcemanager.googleapis.com",
+    "composer.googleapis.com" 
     ]
 
   disable_services_on_destroy = false
