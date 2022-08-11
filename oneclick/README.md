@@ -58,7 +58,7 @@ Do a manual cleanup:
 2. run:  rm -rf terraform*
 3. cd to the ./oneclick/demo/terraform project
 4. run:  rm -rf terraform*
-
+5. run:  rm -rf datamesh-datagenerator
 
 
 
