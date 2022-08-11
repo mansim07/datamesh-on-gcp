@@ -45,6 +45,12 @@ resource "google_service_account" "dq_service_account" {
   display_name = "Data Quality Admin Service Account"
 }
 
+data "google_project" "project" {}
+
+locals {
+  _project_number = data.google_project.project.number
+}
+
 /* Dq roles */
 resource "google_project_iam_member" "dqservice_account_owner" {
   for_each = toset([
@@ -221,6 +227,19 @@ resource "null_resource" "dataproc_metastore" {
 # Reuseable Modules
 ####################################################################################
 
+module "composer" {
+  # Run this as the currently logged in user or the service account (assuming DevOps)
+  source                        = "./modules/composer"
+  location                      = var.location
+  network_id                    = google_compute_network.default_network.id
+  project_id                    = var.project_id
+  project_number                = local._project_number
+  prefix                        = local._prefix_first_element 
+  
+  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
+}
+
+/*
 module "stage_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/stage_data"
@@ -236,10 +255,11 @@ module "stage_data" {
   dataplex_process_bucket_name  = local._dataplex_process_bucket_name
   depends_on = [null_resource.dataproc_metastore]
 }
-
+*/
 ####################################################################################
 # Organize the Data
 ####################################################################################
+/*
 module "organize_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                 = "./modules/organize_data"
@@ -251,10 +271,11 @@ module "organize_data" {
   depends_on = [module.stage_data]
 
 }
-
+*/
 ####################################################################################
 # Register the Data Assets in Dataplex
 ####################################################################################
+/*
 module "register_assets" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/register_assets"
@@ -268,6 +289,7 @@ module "register_assets" {
   depends_on = [module.organize_data]
 
 }
+*/
 
 /*
 ####################################################################################
