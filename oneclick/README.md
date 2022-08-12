@@ -37,7 +37,8 @@ If you are using Cloud Shell, you can skip to the next step.  If not, do the fol
 2. run: terraform init
 3. run:  terraform apply -auto-approve -var project_id=&lt;your-project-id&gt;
 4. cd to the ./oneclick/demo/terraform project
-5. terraform apply -auto-approve -var project_id=&lt;your-project-id&gt; -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
+5. run: terraform init
+6. terraform apply -auto-approve -var project_id=&lt;your-project-id&gt; -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
 
 To get your public ip address from the command line run: curl https://ipinfo.io/ip
 
