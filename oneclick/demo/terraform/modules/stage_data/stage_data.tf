@@ -24,9 +24,13 @@ variable "tmpdir" {}
 variable "customers_bucket_name" {}
 variable "merchants_bucket_name" {}
 variable "transactions_bucket_name" {}
+variable "customers_curated_bucket_name" {}
+variable "merchants_curated_bucket_name" {}
+variable "transactions_curated_bucket_name" {}
 variable "data_gen_git_repo" {}
 variable "transactions_ref_bucket_name" {}
 variable "dataplex_process_bucket_name" {}
+variable "dataplex_bqtemp_bucket_name" {}
 
 
 ####################################################################################
@@ -64,6 +68,11 @@ resource "null_resource" "run_datagen" {
 # Create GCS Buckets
 ####################################################################################
 
+/*
+
+TBD can't use for_each with a string that has a randomly generated number in it
+create each bucket by hand for now.
+
 resource "google_storage_bucket" "storage_buckets" {
   project                     = var.project_id
   for_each = toset([
@@ -80,6 +89,117 @@ resource "google_storage_bucket" "storage_buckets" {
   depends_on = [null_resource.run_datagen]
 
 }
+*/
+
+/*
++ could not create these buckets in a for_each because the name
++ has a random # in it.  Need to find a way around this
+*/
+
+resource "google_storage_bucket" "storage_bucket_1" {
+  project                     = var.project_id
+  name                        = var.customers_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_2" {
+  project                     = var.project_id
+  name                        = var.customers_curated_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_3" {
+  project                     = var.project_id
+  name                        = var.merchants_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_4" {
+  project                     = var.project_id
+  name                        = var.merchants_curated_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_5" {
+  project                     = var.project_id
+  name                        = var.transactions_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_6" {
+  project                     = var.project_id
+  name                        = var.transactions_curated_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_7" {
+  project                     = var.project_id
+  name                        = var.transactions_ref_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_8" {
+  project                     = var.project_id
+  name                        = var.dataplex_process_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "google_storage_bucket" "storage_bucket_9" {
+  project                     = var.project_id
+  name                        = var.dataplex_bqtemp_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [null_resource.run_datagen]
+}
+
+resource "time_sleep" "sleep_after_storage" {
+  create_duration = "60s"
+  depends_on = [
+                google_storage_bucket.storage_bucket_1,
+                google_storage_bucket.storage_bucket_2,
+                google_storage_bucket.storage_bucket_3,
+                google_storage_bucket.storage_bucket_4,
+                google_storage_bucket.storage_bucket_5,
+                google_storage_bucket.storage_bucket_6,
+                google_storage_bucket.storage_bucket_7,
+                google_storage_bucket.storage_bucket_8,
+                google_storage_bucket.storage_bucket_9
+              ]
+}
 
 ####################################################################################
 # Create Customer GCS Objects
@@ -93,7 +213,7 @@ resource "google_storage_bucket_object" "gcs_customers_objects" {
   name        = each.value
   source      = each.key
   bucket = var.customers_bucket_name
-  depends_on = [google_storage_bucket.storage_buckets]
+  depends_on = [time_sleep.sleep_after_storage]
 }
 
 ####################################################################################
@@ -103,12 +223,12 @@ resource "google_storage_bucket_object" "gcs_customers_objects" {
 resource "google_storage_bucket_object" "gcs_merchants_objects" {
   for_each = {
     format("%s/merchants.csv", var.tmpdir) : format("merchants_data/dt=%s/merchants.csv", var.date_partition),
-    "./datamesh-datagenerator/merchant_data/data/ref_data/mcc_codes.csv" : format("merchants_data/dt=%s/mcc_codes/mcc_codes.csv", var.date_partition),
+    "./datamesh-datagenerator/merchant_data/data/ref_data/mcc_codes.csv" : format("mcc_codes/dt=%s/mcc_codes.csv", var.date_partition),
   }
   name        = each.value
   source      = each.key
   bucket = var.merchants_bucket_name
-  depends_on = [google_storage_bucket.storage_buckets]
+  depends_on = [time_sleep.sleep_after_storage]
 }
 
 ####################################################################################
@@ -122,7 +242,7 @@ resource "google_storage_bucket_object" "gcs_transaction_objects" {
   name        = each.value
   source      = each.key
   bucket = var.transactions_bucket_name
-  depends_on = [google_storage_bucket.storage_buckets]
+  depends_on = [time_sleep.sleep_after_storage]
 }
 
 resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
@@ -140,13 +260,39 @@ resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
   name        = format("ref_data/%s/%s.csv", each.key, each.key)
   source      = format("./datamesh-datagenerator/transaction_data/data/ref_data/%s.csv", each.key)
   bucket      = var.transactions_ref_bucket_name
-  depends_on  = [google_storage_bucket.storage_buckets]
+  depends_on = [time_sleep.sleep_after_storage]
 }
 
 ####################################################################################
 # Create Process GCS Objects
 ####################################################################################
 
+#run data creation process
+resource "null_resource" "untar_resources" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../resources/marsbank-datagovernance-process/common
+      tar xvf dataproc-templates-1.0-SNAPSHOT.tar.gz
+      tar xvf tagmanager-1.0-SNAPSHOT.tar.gz
+    EOT
+    }
+    depends_on = [time_sleep.sleep_after_storage]
+
+  }
+
+#using gsutil; TBD: check if terraform can copy folders recursively
+resource "null_resource" "gsutil_resources" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../resources/marsbank-datagovernance-process
+      gsutil -m cp -r * gs://${var.dataplex_process_bucket_name}
+    EOT
+    }
+    depends_on = [null_resource.untar_resources]
+
+  }
+
+/*
 resource "google_storage_bucket_object" "gcs_dataplex_process_objects" {
   for_each = {
     "../resources/dataproc-templates-1.0-SNAPSHOT.jar" : "dataproc-templates-1.0-SNAPSHOT.jar",
@@ -156,8 +302,9 @@ resource "google_storage_bucket_object" "gcs_dataplex_process_objects" {
   name        = each.value
   source      = each.key
   bucket = var.dataplex_process_bucket_name
-  depends_on = [google_storage_bucket.storage_buckets]
+  depends_on = [null_resource.untar_resources]
 }
+*/
 
 ####################################################################################
 # Create BigQuery Datasets
@@ -168,7 +315,10 @@ resource "google_bigquery_dataset" "bigquery_datasets" {
     "raw_data",
     "merchants_reference_data",
     "source_data",
-    "lookup_data"
+    "lookup_data",
+    "prod_customer_refined_data",
+    "prod_merchant_refined_data",
+    "prod_pos_auth_refined_data"
   ])
   project                     = var.project_id
   dataset_id                  = each.key

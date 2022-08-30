@@ -15,51 +15,88 @@
  */
 
 
+variable "project_id" {}
+variable "location" {}
+variable "dataplex_process_bucket_name" {}
+variable "dataplex_bqtemp_bucket_name" {}
+
+resource "null_resource" "curate_data" {
+ for_each = {
+    format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-raw-zone/entities/customers_data",var.project_id, var.location) : format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-curated-zone/assets/customer-curated-data",var.project_id, var.location)
+    #format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-raw-zone/entities/cc_customers_data",var.project_id, var.location) : format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-curated-zone/assets/customer-curated-data",var.project_id, var.location),
+    #format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-raw-zone/entities/entities/merchants_data",var.project_id, var.location) : format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-curated-zone/assets/merchant-curated-data",var.project_id, var.location),
+    #format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-raw-zone/entities/entities/merchants_data",var.project_id, var.location) : format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-curated-zone/assets/mcc_codes",var.project_id, var.location),
+    #format("projects/%s/locations/%s/lakes/prod-transactions-source-domain/zones/transactions-raw-zone/entities/auth_data",var.project_id, var.location) : format("projects/%s/locations/%s/lakes/prod-transactions-source-domain/zones/transactions-curated-zone/assets/transactions-curated-data",var.project_id, var.location)
+  }  
+
+  provisioner "local-exec" {
+    command = format("gcloud beta dataflow flex-template run test --service-account-email %s --template-file-gcs-location %s --region %s --parameters \"inputAssetOrEntitiesList=%s,outputFileFormat=PARQUET,outputAsset=%s\"", 
+                     "customer-sa@${var.project_id}.iam.gserviceaccount.com",
+                     "gs://dataflow-templates-us-central1/latest/flex/Dataplex_File_Format_Conversion",
+                     var.location,
+                     each.key,
+                     each.value
+                     )
+  }
+}
+
+resource "random_id" "rng" {
+  keepers = {
+    first = "${timestamp()}"
+  }     
+  byte_length = 8
+}
 
 variable "command_string" {
-    type = string
-    default = <<-EOT
-echo gcloud beta dataproc batches submit spark
-   --project=%s 
-    --region=%s 
-    --jars=\"file:///usr/lib/spark/external/spark-avro.jar,gs://%s/dataproc-templates-1.0-SNAPSHOT.jar\"
-    --labels=job_type=dataproc_template 
-    --deps-bucket=%s 
-    --files=%s 
-    --class=com.google.cloud.dataproc.templates.main.DataProcTemplate 
-    --template=DATAPLEXGCSTOBQ  
-    --templateProperty=project.id=%s 
-    --templateProperty=dataplex.gcs.bq.target.dataset=%s 
-    --templateProperty=gcs.bigquery.temp.bucket.name=gs://%s 
-    --templateProperty=dataplex.gcs.bq.save.mode=\"append\" 
-    --templateProperty=dataplex.gcs.bq.incremental.partition.copy=\"yes\" 
-    --dataplexEntity=\"projects/%s/locations/%s/lakes/%s/zones/%s/entities/cc_customers_data\" 
-    --partitionField=\"ingest_date\" 
-    --partitionType="DAY" 
-    --customSqlGcsPath="gs://%s/customercustom.sql"
+  type = string
+  default = <<-EOT
+gcloud dataplex tasks create %s \
+    --project=%s \
+    --location=%s \
+    --vpc-sub-network-name=%s \
+    --lake=%s \
+    --trigger-type=ON_DEMAND \
+    --execution-service-account=%s \
+    --spark-main-class="com.google.cloud.dataproc.templates.main.DataProcTemplate" \
+    --spark-file-uris="gs://%s/log4j-spark-driver-template.properties" \
+    --container-image-java-jars="gs://%s/common/dataproc-templates-1.0-SNAPSHOT.jar" \
+    --execution-args=^::^TASK_ARGS="--template=DATAPLEXGCSTOBQ,\
+        --templateProperty=project.id=%s,\
+        --templateProperty=dataplex.gcs.bq.target.dataset=%s,\
+        --templateProperty=gcs.bigquery.temp.bucket.name=%s,\
+        --templateProperty=dataplex.gcs.bq.save.mode=append,\
+        --templateProperty=dataplex.gcs.bq.incremental.partition.copy=yes,\
+        --dataplexEntity=%s,\
+        --partitionField=ingest_date,\
+        --partitionType=DAY,\
+        --customSqlGcsPath=gs://%s/customer-source-configs/customercustom.sql"
 EOT
 }
 
 resource "null_resource" "copy_asset" {
+  for_each = {
+    format("prod_customer_refined_data/customer-sa@%s.iam.gserviceaccount.com", var.project_id) : format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-curated-zone/entities/customers_data",var.project_id, var.location)
+    #format("prod_customer_refined_data/customer-sa@%s.iam.gserviceaccount.com", var.project_id) : format("projects/%s/locations/%s/lakes/prod-customer-source-domain/zones/customer-curated-zone/entities/cc_customers_data",var.project_id, var.location),
+    #format("prod_merchant_refined_data/merchant-sa@%s.iam.gserviceaccount.com", var.project_id) : format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-curated-zone/entities/merchants_data",var.project_id, var.location),
+    #format("prod_merchant_refined_data/merchant-sa@%s.iam.gserviceaccount.com", var.project_id) : format("projects/%s/locations/%s/lakes/prod-merchant-source-domain/zones/merchant-curated-zone/entities/mcc_codes",var.project_id, var.location),
+    #format("prod_pos_auth_refined_data/merchant-sa@%s.iam.gserviceaccount.com", var.project_id) : format("projects/%s/locations/%s/lakes/prod-transactions-source-domain/zones/transactions-curated-zone/entities/merchants_data",var.project_id, var.location)
+  }
+
   provisioner "local-exec" {
-    command = format(var.command_string, var.project_id,
+    command = format(var.command_string,
+                format("DATAPLEXGCSTOBQ-%s-%s", element(split("/", each.key), 0), random_id.rng.hex), 
+                var.project_id,
                 var.location,
+                format("regions/us-central1/subnetworks/%s-misc-subnet", var.project_id),
+                element(split("/", each.value), 5),
+                element(split("/", each.key), 1),
                 var.dataplex_process_bucket_name,
                 var.dataplex_process_bucket_name,
                 var.project_id,
-                "prod_customer_refined_data",  
-                var.dataplex_process_bucket_name,
-                var.project_id,
-                var.location,
-                "prod-customer-source-domain",
-                "customer-raw-zone",
-                customercustom.sql
+                element(split("/", each.key), 0),
+                var.dataplex_bqtemp_bucket_name,
+                each.value,
+                var.dataplex_process_bucket_name
                 )
   }
 }
-
-
-
-
-
-

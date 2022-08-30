@@ -72,6 +72,12 @@ resource "null_resource" "create_zones_nolabels" {
   depends_on  = [null_resource.create_lake]
 }
 
+#sometimes we get API rate limit errors for dataplex; add wait until this is resolved.
+resource "time_sleep" "sleep_after_zones" {
+  create_duration = "60s"
+
+  depends_on = [null_resource.create_zones_nolabels]
+}
 
 resource "null_resource" "create_zones" {
  for_each = {
@@ -89,5 +95,5 @@ resource "null_resource" "create_zones" {
                      each.value
                      )
   }
-  depends_on  = [null_resource.create_lake]
+  depends_on  = [time_sleep.sleep_after_zones]
 }

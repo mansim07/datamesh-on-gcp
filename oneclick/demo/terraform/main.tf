@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+# Create a random string for the project/bucket suffix
+resource "random_string" "project_random" {
+  length  = 10
+  upper   = false
+  lower   = true
+  numeric = true
+  special = false
+}
+
 locals {
   _prefix = var.project_id
   _prefix_first_element           = element(split("-", local._prefix), 0)
@@ -21,11 +30,15 @@ locals {
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_bankofmars_retail_customers_source_data", local._prefix_first_element)
-  _transactions_bucket_name       = format("%s_bankofmars_retail_merchants_data", local._prefix_first_element)
-  _transactions_ref_bucket_name   = format("%s_bankofmars_retail_merchants_ref_data", local._prefix_first_element)
-  _merchants_bucket_name          = format("%s_bankofmars_retail_credit_cards_trasactions_data", local._prefix_first_element)
-  _dataplex_process_bucket_name   = format("%s_bankofmars_dataplex_process", local._prefix_first_element) 
+  _customers_bucket_name          = format("%s_%s_datawarehouse_customers_raw_data", local._prefix_first_element, random_string.project_random.result)
+  _customers_curated_bucket_name  = format("%s_%s_datawarehouse_customers_curated_data", local._prefix_first_element, random_string.project_random.result)
+  _transactions_bucket_name       = format("%s_%s_datawarehouse_trasactions_raw_data", local._prefix_first_element, random_string.project_random.result)
+  _transactions_curated_bucket_name  = format("%s_%s_datawarehouse_trasactions_curated_data", local._prefix_first_element, random_string.project_random.result)
+  _transactions_ref_bucket_name   = format("%s_%s_datawarehouse_transactions_ref_raw_data", local._prefix_first_element, random_string.project_random.result)
+  _merchants_bucket_name          = format("%s_%s_datawarehouse_merchants_raw_data", local._prefix_first_element, random_string.project_random.result)
+  _merchants_curated_bucket_name  = format("%s_%s_datawarehouse_merchants_curated_data", local._prefix_first_element, random_string.project_random.result)
+  _dataplex_process_bucket_name   = format("%s_%s_bankofmars_dataplex_process", local._prefix_first_element, random_string.project_random.result) 
+  _dataplex_bqtemp_bucket_name    = format("%s_%s_bankofmars_dataplex_temp", local._prefix_first_element, random_string.project_random.result) 
 }
 
 provider "google" {
@@ -43,6 +56,18 @@ resource "google_service_account" "dq_service_account" {
   project      = var.project_id
   account_id   =  format("%s-dq-sa", var.project_id)
   display_name = "Data Quality Admin Service Account"
+}
+
+resource "google_service_account" "data_service_account" {
+  project      = var.project_id
+   for_each = {
+    "customer-sa" : "customer-sa",
+    "merchant-sa" : "merchant-sa",
+    "cc-trans-consumer-sa" : "cc-trans-consumer-sa",
+    "cc-trans-sa" : "cc-trans-sa"
+    }
+  account_id   = format("%s", each.key)
+  display_name = format("Demo Service Account %s", each.value)
 }
 
 data "google_project" "project" {}
@@ -108,12 +133,119 @@ resource "google_project_iam_member" "user_account_owner" {
   member   = "user:${local._useradmin_fqn}"
 }
 
-resource "google_service_account_iam_binding" "admin_account_iam" {
+
+
+resource "google_project_iam_member" "iam_customer_sa" {
   for_each = toset([
-    "roles/iam.serviceAccountUser",
-    "roles/iam.serviceAccountTokenCreator"
-    ])
-  role               = each.key
+"roles/iam.serviceAccountUser",
+"roles/iam.serviceAccountTokenCreator",
+"roles/serviceusage.serviceUsageConsumer",
+"roles/bigquery.user",
+"roles/bigquery.jobUser",
+"roles/dataflow.worker",
+"roles/dataplex.developer",
+"roles/dataplex.metadataReader",
+"roles/dataplex.metadataWriter",
+"roles/metastore.metadataEditor",
+"roles/metastore.serviceAgent",
+"roles/dataproc.worker"
+])
+  project  = var.project_id
+  role     = each.key
+  member   = format("serviceAccount:customer-sa@%s.iam.gserviceaccount.com", var.project_id)
+
+  depends_on = [
+    google_service_account.data_service_account
+  ]
+
+}
+
+resource "google_project_iam_member" "iam_merchant_sa" {
+  for_each = toset([
+"roles/iam.serviceAccountUser",
+"roles/iam.serviceAccountTokenCreator",
+"roles/serviceusage.serviceUsageConsumer",
+"roles/artifactregistry.reader",
+"roles/bigquery.user",
+"roles/bigquery.jobUser",
+"roles/dataflow.worker",
+"roles/dataplex.developer",
+"roles/dataplex.metadataReader",
+"roles/dataplex.metadataWriter",
+"roles/metastore.metadataEditor",
+"roles/metastore.serviceAgent",
+"roles/dataproc.worker",
+"roles/storage.objectAdmin",
+"roles/dataflow.admin",
+"roles/dataflow.worker"
+])
+  project  = var.project_id
+  role     = each.key
+  member   = format("serviceAccount:merchant-sa@%s.iam.gserviceaccount.com", var.project_id)
+
+  depends_on = [
+    google_service_account.data_service_account
+  ]
+}
+
+resource "google_project_iam_member" "iam_cc_trans_sa" {
+  for_each = toset([
+"roles/iam.serviceAccountUser",
+"roles/iam.serviceAccountTokenCreator",
+"roles/serviceusage.serviceUsageConsumer",
+"roles/artifactregistry.reader",
+"roles/bigquery.user",
+"roles/bigquery.jobUser",
+"roles/dataflow.worker",
+"roles/dataplex.developer",
+"roles/dataplex.metadataReader",
+"roles/dataplex.metadataWriter",
+"roles/metastore.metadataEditor",
+"roles/metastore.serviceAgent",
+"roles/dataproc.worker",
+"roles/storage.objectAdmin",
+"roles/dataflow.admin",
+"roles/dataflow.worker"
+])
+  project  = var.project_id
+  role     = each.key
+  member   = format("serviceAccount:cc-trans-sa@%s.iam.gserviceaccount.com", var.project_id)
+
+  depends_on = [
+    google_service_account.data_service_account
+  ]
+}
+
+resource "google_project_iam_member" "iam_cc_trans_consumer_sa" {
+  for_each = toset([
+"roles/iam.serviceAccountUser",
+"roles/iam.serviceAccountTokenCreator",
+"roles/serviceusage.serviceUsageConsumer",
+"roles/artifactregistry.reader",
+"roles/bigquery.user",
+"roles/bigquery.jobUser",
+"roles/dataflow.worker",
+"roles/dataplex.developer",
+"roles/dataplex.metadataReader",
+"roles/dataplex.metadataWriter",
+"roles/metastore.metadataEditor",
+"roles/metastore.serviceAgent",
+"roles/dataproc.worker",
+"roles/storage.objectAdmin",
+"roles/dataflow.admin",
+"roles/dataflow.worker"
+])
+  project  = var.project_id
+  role     = each.key
+  member   = format("serviceAccount:cc-trans-consumer-sa@%s.iam.gserviceaccount.com", var.project_id)
+
+  depends_on = [
+    google_service_account.data_service_account
+  ]
+}
+
+resource "google_service_account_iam_binding" "admin_account_iam" {
+  role               = "roles/iam.serviceAccountTokenCreator"
 
   service_account_id = google_service_account.service_account.name
   members = [
@@ -125,6 +257,29 @@ resource "google_service_account_iam_binding" "admin_account_iam" {
   ]
 
 }
+
+/*
+resource "google_service_account_iam_binding" "data_admin_account_iam" {
+  role               = "roles/iam.serviceAccountUser"
+  for_each = toset([
+    "customer-sa",
+    "merchant-sa",
+    "cc-trans-consumer-sa",
+    format("%s-dq-sa", var.project_id),
+    format("%s-admin-sa", var.project_id)
+  ])
+    service_account_id = format("%s@%s.iam.gserviceaccount.com", each.key, var.project_id,)
+  
+  members = [
+    "user:${local._useradmin_fqn}"
+  ]
+
+    depends_on = [
+    google_service_account.service_account
+  ]
+
+}
+*/
 
 ####################################################################################
 # Resource for Network Creation                                                    #
@@ -200,7 +355,7 @@ Introducing sleep to minimize errors from
 dependencies having not completed
 ********************************************/
 resource "time_sleep" "sleep_after_network_and_iam_steps" {
-  create_duration = "240s"
+  create_duration = "120s"
   depends_on = [
                 google_compute_firewall.user_firewall_rule,
                 google_service_account_iam_binding.admin_account_iam,
@@ -222,11 +377,9 @@ resource "null_resource" "dataproc_metastore" {
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
-
 ####################################################################################
 # Reuseable Modules
 ####################################################################################
-
 module "composer" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/composer"
@@ -234,25 +387,31 @@ module "composer" {
   network_id                    = google_compute_network.default_network.id
   project_id                    = var.project_id
   project_number                = local._project_number
-  prefix                        = local._prefix_first_element 
+  prefix                        = local._prefix_first_element
+  dataplex_process_bucket_name  = local._dataplex_process_bucket_name
   
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
 module "stage_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
-  source                        = "./modules/stage_data"
-  project_id                    = var.project_id
-  data_gen_git_repo             = local._data_gen_git_repo
-  location                      = var.location
-  date_partition                = var.date_partition
-  tmpdir                        = var.tmpdir
-  customers_bucket_name         = local._customers_bucket_name
-  merchants_bucket_name         = local._merchants_bucket_name
-  transactions_bucket_name      = local._transactions_bucket_name
-  transactions_ref_bucket_name  = local._transactions_ref_bucket_name
-  dataplex_process_bucket_name  = local._dataplex_process_bucket_name
-  depends_on = [null_resource.dataproc_metastore]
+  source                                = "./modules/stage_data"
+  project_id                            = var.project_id
+  data_gen_git_repo                     = local._data_gen_git_repo
+  location                              = var.location
+  date_partition                        = var.date_partition
+  tmpdir                                = var.tmpdir
+  customers_bucket_name                 = local._customers_bucket_name
+  customers_curated_bucket_name         = local._customers_curated_bucket_name
+  merchants_bucket_name                 = local._merchants_bucket_name
+  merchants_curated_bucket_name         = local._merchants_curated_bucket_name
+  transactions_bucket_name              = local._transactions_bucket_name
+  transactions_curated_bucket_name      = local._transactions_curated_bucket_name
+  transactions_ref_bucket_name          =  local._transactions_ref_bucket_name
+  dataplex_process_bucket_name          = local._dataplex_process_bucket_name
+  dataplex_bqtemp_bucket_name           = local._dataplex_bqtemp_bucket_name
+
+  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
 ####################################################################################
@@ -275,32 +434,36 @@ module "organize_data" {
 ####################################################################################
 module "register_assets" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
-  source                        = "./modules/register_assets"
-  project_id                    = var.project_id
-  location                      = var.location
-  lake_name                     = var.lake_name
-  customers_bucket_name         = local._customers_bucket_name
-  merchants_bucket_name         = local._merchants_bucket_name
-  transactions_bucket_name      = local._transactions_bucket_name
-  transactions_ref_bucket_name  = local._transactions_ref_bucket_name
+  source                                = "./modules/register_assets"
+  project_id                            = var.project_id
+  location                              = var.location
+  lake_name                             = var.lake_name
+  customers_bucket_name                 = local._customers_bucket_name
+  merchants_bucket_name                 = local._merchants_bucket_name
+  transactions_bucket_name              = local._transactions_bucket_name
+  transactions_ref_bucket_name          = local._transactions_ref_bucket_name
+  customers_curated_bucket_name         = local._customers_curated_bucket_name
+  merchants_curated_bucket_name         = local._merchants_curated_bucket_name
+  transactions_curated_bucket_name      = local._transactions_curated_bucket_name
   depends_on = [module.organize_data]
 
 }
 
-
-/*
 ####################################################################################
-# Run the Data Quality Tests
+# Run the Data Pipelines
 ####################################################################################
 module "process_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source          = "./modules/process_data"
-  
+  project_id                            = var.project_id
+  location                              = var.location
+  dataplex_process_bucket_name          = local._dataplex_process_bucket_name
+  dataplex_bqtemp_bucket_name           = local._dataplex_bqtemp_bucket_name
+
   depends_on = [module.register_assets]
 
 }
 
-*/
 ########################################################################################
 #NULL RESOURCE FOR DELAY/TIMER/SLEEP                                                   #
 #TO GIVE TIME TO RESOURCE TO COMPLETE ITS CREATION THEN DEPENDANT RESOURCE WILL CREATE #

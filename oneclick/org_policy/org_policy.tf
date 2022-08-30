@@ -31,6 +31,7 @@ module "activate_service_apis" {
 
   activate_apis = [
     "dataproc.googleapis.com",
+    "dataflow.googleapis.com",
     "orgpolicy.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
@@ -82,12 +83,12 @@ resource "google_project_organization_policy" "bool-policies" {
 
 }
 
-
 resource "google_project_organization_policy" "list_policies" {
   for_each = {
     "compute.vmCanIpForward" : true,
     "compute.vmExternalIpAccess" : true,
     "compute.restrictVpcPeering" : true
+    "compute.trustedImageProjects" : true
   }
   project     = var.project_id
   constraint = format("constraints/%s", each.key)
@@ -102,5 +103,3 @@ resource "google_project_organization_policy" "list_policies" {
   ]
 
 }
-
-
