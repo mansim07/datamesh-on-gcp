@@ -7,6 +7,13 @@ variable "org_id" {
  description = "Organization ID in which project created"
 }
 
+variable "rand" {
+  description = "random number used for creating unique GCS bucket names"
+}
+
+variable "datastore_project_id" {
+  description = "project_id for the datastore project"
+}
 variable "location" {
  description = "Location/region to be used"
  default = "us-central1"

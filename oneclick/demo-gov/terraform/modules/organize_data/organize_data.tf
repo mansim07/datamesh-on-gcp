@@ -21,6 +21,8 @@ variable "project_id" {}
 variable "location" {}
 variable "lake_name" {}
 variable "metastore_service_name" {}
+variable "project_number" {}
+variable "datastore_project_id" {}
 
 
 resource "null_resource" "create_lake" {
@@ -40,6 +42,53 @@ resource "null_resource" "create_lake" {
                      each.value,
                      "projects/${var.project_id}/locations/${var.location}/services/${var.metastore_service_name}")
   }
+}
+
+/* roles for dataplex service account in datastore project 
++ so that dataplex can read from buckets
+
+terraform doesn't seem to allow setting IAM bindings across projects so using gcloud instead
+
+resource "google_project_iam_member" "dataplex_service_account_owner" {
+for_each = toset([
+"roles/dataplex.dataReader",
+"roles/dataplex.serviceAgent"])
+  project  = var.datastore_project_id
+  role     = each.key
+  member   = format("serviceAccount:service-%s@gcp-sa-dataplex.iam.gserviceaccount.com", local._project_number)
+  depends_on = [
+    google_service_account.dq_service_account
+  ]
+}
+*/
+
+
+resource "null_resource" "dataplex_permissions_1" {
+  provisioner "local-exec" {
+    command = format("gcloud projects add-iam-policy-binding %s --member=\"serviceAccount:service-%s@gcp-sa-dataplex.iam.gserviceaccount.com\" --role=\"roles/dataplex.dataReader\"", 
+                      var.datastore_project_id,
+                      var.project_number)
+  }
+
+  depends_on = [null_resource.create_lake]
+}
+
+resource "null_resource" "dataplex_permissions_2" {
+  provisioner "local-exec" {
+    command = format("gcloud projects add-iam-policy-binding %s --member=\"serviceAccount:service-%s@gcp-sa-dataplex.iam.gserviceaccount.com\" --role=\"roles/cloudbuild.serviceAgent\"", 
+                      var.datastore_project_id,
+                      var.project_number)
+  }
+
+  depends_on = [null_resource.dataplex_permissions_2]
+}
+
+resource "time_sleep" "sleep_after_dataplex_permissions" {
+  create_duration = "120s"
+  depends_on = [
+                null_resource.dataplex_permissions_1,
+                null_resource.dataplex_permissions_2
+              ]
 }
 
 resource "null_resource" "create_zones_nolabels" {
@@ -69,7 +118,7 @@ resource "null_resource" "create_zones_nolabels" {
                      element(split("/", each.key), 3)
                      )
   }
-  depends_on  = [null_resource.create_lake]
+  depends_on  = [time_sleep.sleep_after_dataplex_permissions]
 }
 
 #sometimes we get API rate limit errors for dataplex; add wait until this is resolved.

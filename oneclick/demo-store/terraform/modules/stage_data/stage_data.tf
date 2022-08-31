@@ -27,10 +27,8 @@ variable "transactions_bucket_name" {}
 variable "customers_curated_bucket_name" {}
 variable "merchants_curated_bucket_name" {}
 variable "transactions_curated_bucket_name" {}
-variable "data_gen_git_repo" {}
 variable "transactions_ref_bucket_name" {}
-variable "dataplex_process_bucket_name" {}
-variable "dataplex_bqtemp_bucket_name" {}
+variable "data_gen_git_repo" {}
 
 
 ####################################################################################
@@ -166,25 +164,7 @@ resource "google_storage_bucket" "storage_bucket_7" {
   depends_on = [null_resource.run_datagen]
 }
 
-resource "google_storage_bucket" "storage_bucket_8" {
-  project                     = var.project_id
-  name                        = var.dataplex_process_bucket_name
-  location                    = var.location
-  force_destroy               = true
-  uniform_bucket_level_access = true
 
-  depends_on = [null_resource.run_datagen]
-}
-
-resource "google_storage_bucket" "storage_bucket_9" {
-  project                     = var.project_id
-  name                        = var.dataplex_bqtemp_bucket_name
-  location                    = var.location
-  force_destroy               = true
-  uniform_bucket_level_access = true
-
-  depends_on = [null_resource.run_datagen]
-}
 
 resource "time_sleep" "sleep_after_storage" {
   create_duration = "60s"
@@ -195,9 +175,7 @@ resource "time_sleep" "sleep_after_storage" {
                 google_storage_bucket.storage_bucket_4,
                 google_storage_bucket.storage_bucket_5,
                 google_storage_bucket.storage_bucket_6,
-                google_storage_bucket.storage_bucket_7,
-                google_storage_bucket.storage_bucket_8,
-                google_storage_bucket.storage_bucket_9
+                google_storage_bucket.storage_bucket_7
               ]
 }
 
@@ -262,49 +240,6 @@ resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
   bucket      = var.transactions_ref_bucket_name
   depends_on = [time_sleep.sleep_after_storage]
 }
-
-####################################################################################
-# Create Process GCS Objects
-####################################################################################
-
-#run data creation process
-resource "null_resource" "untar_resources" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      cd ../resources/marsbank-datagovernance-process/common
-      tar xvf dataproc-templates-1.0-SNAPSHOT.tar.gz
-      tar xvf tagmanager-1.0-SNAPSHOT.tar.gz
-    EOT
-    }
-    depends_on = [time_sleep.sleep_after_storage]
-
-  }
-
-#using gsutil; TBD: check if terraform can copy folders recursively
-resource "null_resource" "gsutil_resources" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      cd ../resources/marsbank-datagovernance-process
-      gsutil -m cp -r * gs://${var.dataplex_process_bucket_name}
-    EOT
-    }
-    depends_on = [null_resource.untar_resources]
-
-  }
-
-/*
-resource "google_storage_bucket_object" "gcs_dataplex_process_objects" {
-  for_each = {
-    "../resources/dataproc-templates-1.0-SNAPSHOT.jar" : "dataproc-templates-1.0-SNAPSHOT.jar",
-    "../resources/log4j-spark-driver-template.properties" : "log4j-spark-driver-template.properties",
-    "../resources/customercustom.sql" : "customercustom.sql"
-  }
-  name        = each.value
-  source      = each.key
-  bucket = var.dataplex_process_bucket_name
-  depends_on = [null_resource.untar_resources]
-}
-*/
 
 ####################################################################################
 # Create BigQuery Datasets

@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-# Create a random string for the project/bucket suffix
-resource "random_string" "project_random" {
-  length  = 10
-  upper   = false
-  lower   = true
-  numeric = true
-  special = false
-}
-
 locals {
   _prefix = var.project_id
+  _random = var.rand
   _prefix_first_element           = element(split("-", local._prefix), 0)
+  _prefix_datastore               = element(split("-", var.datastore_project_id), 0)
   _useradmin_fqn                  = format("admin@%s", var.org_id)
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_%s_datawarehouse_customers_raw_data", local._prefix_first_element, random_string.project_random.result)
-  _customers_curated_bucket_name  = format("%s_%s_datawarehouse_customers_curated_data", local._prefix_first_element, random_string.project_random.result)
-  _transactions_bucket_name       = format("%s_%s_datawarehouse_trasactions_raw_data", local._prefix_first_element, random_string.project_random.result)
-  _transactions_curated_bucket_name  = format("%s_%s_datawarehouse_trasactions_curated_data", local._prefix_first_element, random_string.project_random.result)
-  _transactions_ref_bucket_name   = format("%s_%s_datawarehouse_transactions_ref_raw_data", local._prefix_first_element, random_string.project_random.result)
-  _merchants_bucket_name          = format("%s_%s_datawarehouse_merchants_raw_data", local._prefix_first_element, random_string.project_random.result)
-  _merchants_curated_bucket_name  = format("%s_%s_datawarehouse_merchants_curated_data", local._prefix_first_element, random_string.project_random.result)
-  _dataplex_process_bucket_name   = format("%s_%s_bankofmars_dataplex_process", local._prefix_first_element, random_string.project_random.result) 
-  _dataplex_bqtemp_bucket_name    = format("%s_%s_bankofmars_dataplex_temp", local._prefix_first_element, random_string.project_random.result) 
+  _customers_bucket_name          = format("%s_%s_datastore_customers_raw_data", local._prefix_datastore, var.rand)
+  _customers_curated_bucket_name  = format("%s_%s_datastore_customers_curated_data", local._prefix_datastore, var.rand)
+  _transactions_bucket_name       = format("%s_%s_datastore_trasactions_raw_data", local._prefix_datastore,  var.rand)
+  _transactions_curated_bucket_name  = format("%s_%s_datastore_trasactions_curated_data", local._prefix_datastore, var.rand)
+  _transactions_ref_bucket_name   = format("%s_%s_datastore_transactions_ref_raw_data", local._prefix_datastore, var.rand)
+  _merchants_bucket_name          = format("%s_%s_datastore_merchants_raw_data", local._prefix_datastore, var.rand)
+  _merchants_curated_bucket_name  = format("%s_%s_datastore_merchants_curated_data", local._prefix_datastore, var.rand)
+  _dataplex_process_bucket_name   = format("%s_%s_datagov_dataplex_process", local._prefix_datastore, var.rand) 
+  _dataplex_bqtemp_bucket_name    = format("%s_%s_datagov_dataplex_temp", local._prefix_datastore, var.rand) 
 }
 
 provider "google" {
@@ -132,8 +125,6 @@ resource "google_project_iam_member" "user_account_owner" {
   role     = each.key
   member   = "user:${local._useradmin_fqn}"
 }
-
-
 
 resource "google_project_iam_member" "iam_customer_sa" {
   for_each = toset([
@@ -377,6 +368,38 @@ resource "null_resource" "dataproc_metastore" {
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
+resource "google_storage_bucket" "storage_bucket_process" {
+  project                     = var.project_id
+  name                        = local._dataplex_process_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
+}
+
+resource "google_storage_bucket" "storage_bucket_bqtemp" {
+  project                     = var.project_id
+  name                        = local._dataplex_bqtemp_bucket_name
+  location                    = var.location
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
+}
+
+resource "null_resource" "gsutil_resources" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../resources/marsbank-datagovernance-process
+      gsutil -u ${var.project_id} cp gs://dataplex-dataproc-templates-artifacts/* ./common/.
+      gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
+    EOT
+    }
+    depends_on = [google_storage_bucket.storage_bucket_process]
+
+  }
+
 ####################################################################################
 # Reuseable Modules
 ####################################################################################
@@ -393,27 +416,6 @@ module "composer" {
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
-module "stage_data" {
-  # Run this as the currently logged in user or the service account (assuming DevOps)
-  source                                = "./modules/stage_data"
-  project_id                            = var.project_id
-  data_gen_git_repo                     = local._data_gen_git_repo
-  location                              = var.location
-  date_partition                        = var.date_partition
-  tmpdir                                = var.tmpdir
-  customers_bucket_name                 = local._customers_bucket_name
-  customers_curated_bucket_name         = local._customers_curated_bucket_name
-  merchants_bucket_name                 = local._merchants_bucket_name
-  merchants_curated_bucket_name         = local._merchants_curated_bucket_name
-  transactions_bucket_name              = local._transactions_bucket_name
-  transactions_curated_bucket_name      = local._transactions_curated_bucket_name
-  transactions_ref_bucket_name          =  local._transactions_ref_bucket_name
-  dataplex_process_bucket_name          = local._dataplex_process_bucket_name
-  dataplex_bqtemp_bucket_name           = local._dataplex_bqtemp_bucket_name
-
-  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
-}
-
 ####################################################################################
 # Organize the Data
 ####################################################################################
@@ -424,8 +426,10 @@ module "organize_data" {
   project_id             = var.project_id
   location               = var.location
   lake_name              = var.lake_name
+  project_number         = local._project_number
+  datastore_project_id   = var.datastore_project_id
 
-  depends_on = [module.stage_data]
+  depends_on = [null_resource.dataproc_metastore]
 
 }
 
@@ -445,10 +449,13 @@ module "register_assets" {
   customers_curated_bucket_name         = local._customers_curated_bucket_name
   merchants_curated_bucket_name         = local._merchants_curated_bucket_name
   transactions_curated_bucket_name      = local._transactions_curated_bucket_name
+  datastore_project_id                  = var.datastore_project_id
   depends_on = [module.organize_data]
 
 }
 
+/*
+Data pipelines will be done in composer for initial enablement
 ####################################################################################
 # Run the Data Pipelines
 ####################################################################################
@@ -463,6 +470,7 @@ module "process_data" {
   depends_on = [module.register_assets]
 
 }
+*/
 
 ########################################################################################
 #NULL RESOURCE FOR DELAY/TIMER/SLEEP                                                   #

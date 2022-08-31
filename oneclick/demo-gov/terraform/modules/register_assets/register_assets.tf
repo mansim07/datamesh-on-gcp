@@ -27,6 +27,7 @@ variable "transactions_ref_bucket_name" {}
 variable "customers_curated_bucket_name" {}
 variable "merchants_curated_bucket_name" {}
 variable "transactions_curated_bucket_name" {}
+variable "datastore_project_id" {}
 
 resource "null_resource" "register_gcs_assets3" {
  for_each = {
@@ -44,7 +45,7 @@ resource "null_resource" "register_gcs_assets3" {
                      var.location,
                      element(split("/", each.key), 3),
                      element(split("/", each.key), 2),
-                     "projects/${var.project_id}/buckets/${each.value}",
+                     "projects/${var.datastore_project_id}/buckets/${each.value}",
                      element(split("/", each.key), 1),
                      )
   }
