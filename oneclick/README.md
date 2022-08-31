@@ -43,7 +43,7 @@ If you are using Cloud Shell, you can skip to the next step.  If not, do the fol
 4. run: terraform init
 5. run:  terraform apply -auto-approve -var project_id=&lt;your-datastore-project-id&gt;
 6. run: rm terraform*
-7. run: gcloud config set project &lt;your-datastore-project-id&gt
+7. run: gcloud config set project &lt;your-datagov-project-id&gt
 8. run: terraform init
 9. run:  terraform apply -auto-approve -var project_id=&lt;your-datagov-project-id&gt;
 10. cd to the ./oneclick/demo-store/terraform project
