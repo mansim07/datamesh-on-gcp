@@ -39,7 +39,7 @@ If you are using Cloud Shell, you can skip to the next step.  If not, do the fol
 1. generate a random number and save to a variable:
     * RAND=$(((RND=RANDOM<<15|RANDOM)))
 2. cd to the ./oneclick/org_policy folder
-3. run: gcloud config set project &lt;your-datastor-project-id&gt
+3. run: gcloud config set project &lt;your-datastor-project-id&gt;
 4. run: terraform init
 5. run:  terraform apply -auto-approve -var project_id=&lt;your-datastore-project-id&gt;
 6. run: rm terraform*
@@ -47,11 +47,13 @@ If you are using Cloud Shell, you can skip to the next step.  If not, do the fol
 8. run: terraform init
 9. run:  terraform apply -auto-approve -var project_id=&lt;your-datagov-project-id&gt;
 10. cd to the ./oneclick/demo-store/terraform project
-11. run: terraform init
-12. terraform apply -auto-approve -var rand=${RAND} -var project_id=&lt;your-datastore-project-id&gt;  -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
-13. cd to the ./oneclick/demo-gov/terraform project
-14. run: terraform init
-15. terraform apply -auto-approve -var rand=${RAND} -var project_id=&lt;your-datagov-project-id&gt; -var datastore_project_id=&lt;your-datastore-project-id&gt; -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
+11. run: gcloud config set project &lt;your-datastor-project-id&gt;
+12. run: terraform init
+13. terraform apply -auto-approve -var rand=${RAND} -var project_id=&lt;your-datastore-project-id&gt;  -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
+14. cd to the ./oneclick/demo-gov/terraform project
+15. run: gcloud config set project &lt;your-datagov-project-id&gt
+16. run: terraform init
+17. terraform apply -auto-approve -var rand=${RAND} -var project_id=&lt;your-datagov-project-id&gt; -var datastore_project_id=&lt;your-datastore-project-id&gt; -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
 
 
 To get your public ip address from the command line run: curl https://ipinfo.io/ip
