@@ -75,7 +75,7 @@ resource "null_resource" "dataplex_permissions_1" {
 
 resource "null_resource" "dataplex_permissions_2" {
   provisioner "local-exec" {
-    command = format("gcloud projects add-iam-policy-binding %s --member=\"serviceAccount:service-%s@gcp-sa-dataplex.iam.gserviceaccount.com\" --role=\"roles/cloudbuild.serviceAgent\"", 
+    command = format("gcloud projects add-iam-policy-binding %s --member=\"serviceAccount:service-%s@gcp-sa-dataplex.iam.gserviceaccount.com\" --role=\"roles/dataplex.serviceAgent\"", 
                       var.datastore_project_id,
                       var.project_number)
   }
