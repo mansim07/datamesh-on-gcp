@@ -409,6 +409,7 @@ module "composer" {
   location                      = var.location
   network_id                    = google_compute_network.default_network.id
   project_id                    = var.project_id
+  datastore_project_id          = var.datastore_project_id
   project_number                = local._project_number
   prefix                        = local._prefix_first_element
   dataplex_process_bucket_name  = local._dataplex_process_bucket_name

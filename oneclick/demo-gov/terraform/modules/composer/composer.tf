@@ -18,6 +18,7 @@
 # Variables
 ####################################################################################
 variable "project_id" {}
+variable "datastore_project_id" {}
 variable "project_number" {}
 variable "location" {}
 variable "network_id" {}
@@ -94,7 +95,7 @@ resource "google_project_iam_member" "cloudcomposer_act_as" {
 
 resource "google_composer_environment" "composer_env" {
   project  = var.project_id
-  name     = "data-analytics-demo-composer-2"
+  name     = "datamesh-enablement-demo-composer-2"
   region   = var.location
 
   config {
@@ -111,7 +112,7 @@ resource "google_composer_environment" "composer_env" {
         customer_dp_info_input_file = "data-product-info-tag-auto.yaml",
         customer_dp_info_input_path = "${var.dataplex_process_bucket_name}/customer-source-configs",
         customer_dplx_lake_id = "prod-customer-source-domain",
-        customer_dplx_region = "us-central1",
+        customer_dplx_region = "${var.location}",
         customer_dplx_zone_id = "customer-data-product-zone",
         customer_dq_info_input_path = "${var.dataplex_process_bucket_name}/customer-source-configs",
         customer_dq_input_file = "data-product-quality-tag-auto.yaml",
@@ -125,14 +126,14 @@ resource "google_composer_environment" "composer_env" {
         dq_bq_region = "US",
         dq_dataset_id = "prod_dq_check_ds",
         dq_target_summary_table = "${var.prefix}-datagovernance.prod_dq_check_ds.dq_results",
-        #gcp_customer_sa_acct = "customer-sa@${var.prefix}-datagovernance.iam.gserviceaccount.com",
-        gcp_dg_project = "${var.prefix}-datagovernance",
-        gcp_dw_project = "${var.prefix}-datawarehouse",
-        #gcp_merchants_sa_acct = "merchant-sa@${var.prefix}-datagovernance.iam.gserviceaccount.com",
-        gcp_project_region = "us-central1",
-        gcp_sub_net = "projects/${var.prefix}-datagovernance/regions/us-central1/subnetworks/default",
-        #gcp_transactions_consumer_sa_acct = "cc-trans-consumer-sa@${var.prefix}-datagovernance.iam.gserviceaccount.com",
-        #gcp_transactions_sa_acct = "cc-trans-sa@${var.prefix}-datagovernance.iam.gserviceaccount.com",
+        #gcp_customer_sa_acct = "customer-sa@${var.project_id}.iam.gserviceaccount.com",
+        gcp_dg_project = "${var.project_id}",
+        gcp_dw_project = "${var.datastore_project_id",
+        #gcp_merchants_sa_acct = "merchant-sa@${var.project_id}.iam.gserviceaccount.com",
+        gcp_project_region = "${var.location}",
+        gcp_sub_net = "projects/${var.project_id}/regions/${var.location}/subnetworks/${var.prefix}-misc-subnet",
+        #gcp_transactions_consumer_sa_acct = "cc-trans-consumer-sa@${var.project_id}.iam.gserviceaccount.com",
+        #gcp_transactions_sa_acct = "cc-trans-sa@${var.project_id}.iam.gserviceaccount.com",
         gcs_dest_bucket = "test",
         gcs_source_bucket = "test",
         gdc_tag_jar = "${var.dataplex_process_bucket_name}/common/tagmanager-1.0-SNAPSHOT.jar",
@@ -143,7 +144,7 @@ resource "google_composer_environment" "composer_env" {
         merchant_dp_info_input_file = "data-product-info-tag-auto.yaml",
         merchant_dp_info_input_path = "${var.dataplex_process_bucket_name}/merchant-source-configs",
         merchant_dplx_lake_id = "prod-merchant-source-domain",
-        merchant_dplx_region = "us-central1",
+        merchant_dplx_region = "${var.location}",
         merchant_dplx_zone_id = "merchant-data-product-zone",
         merchant_dq_info_input_path = "${var.dataplex_process_bucket_name}/merchant-source-configs",
         merchant_dq_input_file = "data-product-quality-tag-auto.yaml",
@@ -154,10 +155,10 @@ resource "google_composer_environment" "composer_env" {
         merchant_partition_date = "2022-05-01",
         partition_date = "2022-05-01",
         table_list_file_path = "/home/airflow/gcs/data/tablelist.txt",
-        tag_template_data_product_classification = "projects/${var.prefix}-datagovernance/locations/us-central1/tagTemplates/data_product_classification",
-        tag_template_data_product_exchange = "projects/${var.prefix}-datagovernance/locations/us-central1/tagTemplates/data_product_exchange",
-        tag_template_data_product_info = "projects/${var.prefix}-datagovernance/locations/us-central1/tagTemplates/data_product_information",
-        tag_template_data_product_quality = "projects/${var.prefix}-datagovernance/locations/us-central1/tagTemplates/data_product_quality",
+        tag_template_data_product_classification = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_classification",
+        tag_template_data_product_exchange = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_exchange",
+        tag_template_data_product_info = "projects/${var.project_id}/locations/${var.location}tagTemplates/data_product_information",
+        tag_template_data_product_quality = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_quality",
         transactions_dc_info_input_path = "data-product-classification-tag-auto.yaml",
         transactions_dc_input_file = "data-product-classification-tag-auto.yaml",
         transactions_dp_info_input_file = "data-product-info-tag-auto.yaml",
