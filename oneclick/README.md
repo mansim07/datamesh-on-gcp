@@ -58,7 +58,7 @@ If you are using Cloud Shell, you can skip to the next step.  If not, do the fol
 
 To get your public ip address from the command line run: curl https://ipinfo.io/ip
 
-## Multiple Runs and/or cleanup:
+## Multiple Runs and/or cleanup: (This DOES NOT WORK at the moment; lake deletion doesn't delete child objects).
 
 - You can run terraform destory as shown below but note that the Lake/Zones/Assets will not be destroyed.
 -- as of this version, you will have to create a new project if the Lakes, Zones, or Assets were successfully created.
@@ -73,9 +73,12 @@ OR
 Do a manual cleanup:
 1. cd to the ./oneclick/org_policy folder
 2. run:  rm -rf terraform*
-3. cd to the ./oneclick/demo/terraform project
+3. cd to the ./oneclick/demo-gov/terraform project
 4. run:  rm -rf terraform*
-5. run:  rm -rf datamesh-datagenerator
+5. cd to the ./oneclick/demo-store/terraform project
+6. run:  rm -rf terraform*
+7. run:  rm -rf datamesh-datagenerator
+8. delete datagov and datastore projects via UI
 
 
 
