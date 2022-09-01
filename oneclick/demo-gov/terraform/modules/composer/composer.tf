@@ -128,7 +128,7 @@ resource "google_composer_environment" "composer_env" {
         dq_target_summary_table = "${var.prefix}-datagovernance.prod_dq_check_ds.dq_results",
         #gcp_customer_sa_acct = "customer-sa@${var.project_id}.iam.gserviceaccount.com",
         gcp_dg_project = "${var.project_id}",
-        gcp_dw_project = "${var.datastore_project_id",
+        gcp_dw_project = "${var.datastore_project_id}",
         #gcp_merchants_sa_acct = "merchant-sa@${var.project_id}.iam.gserviceaccount.com",
         gcp_project_region = "${var.location}",
         gcp_sub_net = "projects/${var.project_id}/regions/${var.location}/subnetworks/${var.prefix}-misc-subnet",
