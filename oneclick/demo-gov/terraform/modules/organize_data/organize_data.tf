@@ -80,7 +80,7 @@ resource "null_resource" "dataplex_permissions_2" {
                       var.project_number)
   }
 
-  depends_on = [null_resource.dataplex_permissions_2]
+  depends_on = [null_resource.dataplex_permissions_1]
 }
 
 resource "time_sleep" "sleep_after_dataplex_permissions" {
