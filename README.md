@@ -28,6 +28,9 @@
 
     Copy and execute 
     ```
+
+    source ~/.profile 
+    
     echo "export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}" >> ~/.profile
 
     echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
