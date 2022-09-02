@@ -42,8 +42,17 @@
     echo "export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format='value(name)')" >> ~/.profile
 
     ```
+5. Validate the environment variables 
 
-5. Create two new projects with the assigned billing account using the below commands: 
+    ```
+    cat ~/.profile 
+    ```
+
+    [[/demo_artifacts/imgs/validate-profile.png|alt=octocat]]
+
+
+
+6. Create two new projects with the assigned billing account using the below commands: 
   * Create the projects 
     ```shell
     source ~/.profile 
@@ -66,7 +75,7 @@
 
     ```
 
-5.  Install necessary python libraries
+7.  Install necessary python libraries
      
      ```shell
     pip3 install google-cloud-storage
@@ -74,7 +83,7 @@
     pip3 install faker_credit_score
     ```
 
-6. Use Terraform to setup the rest of the environment
+8. Use Terraform to setup the rest of the environment
 
     ```
     cd ./oneclick/
