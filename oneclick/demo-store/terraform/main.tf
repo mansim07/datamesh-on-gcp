@@ -23,15 +23,15 @@ locals {
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_%s_datastore_customers_raw_data", local._prefix_first_element, var.rand)
-  _customers_curated_bucket_name  = format("%s_%s_datastore_customers_curated_data", local._prefix_first_element, var.rand)
-  _transactions_bucket_name       = format("%s_%s_datastore_trasactions_raw_data", local._prefix_first_element, var.rand)
-  _transactions_curated_bucket_name  = format("%s_%s_datastore_trasactions_curated_data", local._prefix_first_element, var.rand)
-  _transactions_ref_bucket_name   = format("%s_%s_datastore_transactions_ref_raw_data", local._prefix_first_element, var.rand)
-  _merchants_bucket_name          = format("%s_%s_datastore_merchants_raw_data", local._prefix_first_element, var.rand)
-  _merchants_curated_bucket_name  = format("%s_%s_datastore_merchants_curated_data", local._prefix_first_element, var.rand)
-  _dataplex_process_bucket_name   = format("%s_%s_datagov_dataplex_process", local._prefix_first_element, var.rand) 
-  _dataplex_bqtemp_bucket_name    = format("%s_%s_datagov_dataplex_temp", local._prefix_first_element, var.rand) 
+  _customers_bucket_name          = format("%s_%s_customers_raw_data", local._prefix_first_element, var.rand)
+  _customers_curated_bucket_name  = format("%s_%s_customers_curated_data", local._prefix_first_element, var.rand)
+  _transactions_bucket_name       = format("%s_%s_trasactions_raw_data", local._prefix_first_element, var.rand)
+  _transactions_curated_bucket_name  = format("%s_%s_trasactions_curated_data", local._prefix_first_element, var.rand)
+  _transactions_ref_bucket_name   = format("%s_%s_transactions_ref_raw_data", local._prefix_first_element, var.rand)
+  _merchants_bucket_name          = format("%s_%s_merchants_raw_data", local._prefix_first_element, var.rand)
+  _merchants_curated_bucket_name  = format("%s_%s_merchants_curated_data", local._prefix_first_element, var.rand)
+  _dataplex_process_bucket_name   = format("%s_%s__dataplex_process", local._prefix_first_element, var.rand) 
+  _dataplex_bqtemp_bucket_name    = format("%s_%s_dataplex_temp", local._prefix_first_element, var.rand) 
 }
 
 provider "google" {
