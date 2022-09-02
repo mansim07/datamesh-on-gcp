@@ -51,7 +51,7 @@ resource "null_resource" "register_gcs_assets1" {
 resource "time_sleep" "sleep_after_assets" {
   create_duration = "60s"
 
-  depends_on = [null_resource.create_zones_nolabels]
+  depends_on = [null_resource.register_gcs_assets1]
 }
 
 
