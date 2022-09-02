@@ -20,9 +20,9 @@
 
     Copy and execute 
     ```
-    export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}
+    echo "export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}" >> ~/.profile
 
-    export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}
+    echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
 
     export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format="value(name)")
 
@@ -144,6 +144,8 @@
 ## Lab 4: Data Curation
 
 ## Lab 5: Data Quality
+
+[Data Quality Lab Instructions](https://docs.google.com/document/d/17m6bBAVf51q3tvo7hdjBElac32_t8FR3olZH6vTOYhs/edit#heading=h.10b13csq101)
 
 ## Lab 6: Data Refinement & Movement 
 
