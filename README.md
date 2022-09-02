@@ -56,9 +56,9 @@
 5.  Install necessary python libraries
      
      ```shell
-        pip3 install google-cloud-storage
-        pip3 install numpy
-        pip3 install faker_credit_score
+    pip3 install google-cloud-storage
+    pip3 install numpy
+    pip3 install faker_credit_score
     ```
 
 6. Use Terraform to setup the rest of the environment
