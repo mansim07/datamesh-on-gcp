@@ -149,6 +149,8 @@
 
 ## Lab 6: Data Refinement & Movement 
 
+[Data Refinement Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
+
 ## Lab 7: Building Data Products
 
 ## Lab 8: Tag templates & Bulk Tagging
