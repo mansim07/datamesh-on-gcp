@@ -137,27 +137,27 @@
 
 ## Lab 2: Data Classification using DLP
 
-## Lab 2: Discover Metadata
+## Lab 3: Discover Metadata
 
-## Lab 3: Manging Security
+## Lab 4: Manging Security
 
-## Lab 4: Data Curation
+## Lab 5: Data Curation
 
-## Lab 5: Data Quality
+## Lab 6: Data Quality
 
 [Data Quality Lab Instructions](https://docs.google.com/document/d/17m6bBAVf51q3tvo7hdjBElac32_t8FR3olZH6vTOYhs/edit#heading=h.10b13csq101)
 
-## Lab 6: Data Refinement & Movement 
+## Lab 7: Data Refinement & Movement 
 
 [Data Refinement Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
 
-## Lab 7: Building Data Products
+## Lab 8: Building Data Products
 
-## Lab 8: Tag templates & Bulk Tagging
+## Lab 9: Tag templates & Bulk Tagging
 
-## Lab 9: Data Lineage 
+## Lab 10: Data Lineage 
 
-## Lab 9: Orcehstrate using Composer
+## Lab 11: Orcehstrate using Composer
 
 
 ## Clean up 
