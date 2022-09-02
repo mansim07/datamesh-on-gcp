@@ -4,16 +4,18 @@
 
 2. Open Cloud Shell while logged in as admin@.
 
-3. set up the environment variables.
+3.  Clone this repository in Cloud Shell
+
+    ```shell
+    git clone https://github.com/mansim07/datamesh-on-gcp
+    ```
+
+4. Set up the environment variables.
 
     Make sure you run the RAND once and capture the  value 
 
     ``` 
     echo $(((RND=RANDOM<<15|RANDOM)))
-    ```
-    Set the static values 
-
-    ```
     export RAND_ID=<value-from-above>
     export USERNAME=<your-corp-email-without-@google.com>
     ```
@@ -24,14 +26,13 @@
 
     echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
 
-    export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format="value(name)")
+    echo "export ORG_ID=$(gcloud organizations list --filter='displayName~${USERNAME}' --format='value(name)')"  >> ~/.profile
 
-    export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format="value(name)")
+    echo "export BILLING_ID=$(gcloud beta billing accounts list --filter='displayName~${USERNAME}' --format='value(name)')" >> ~/.profile
 
     ```
 
-
-3. Create two new projects with the assigned billing account using the below commands: 
+5. Create two new projects with the assigned billing account using the below commands: 
   * Create the projects 
     ```shell
     $ gcloud projects create ${PROJECT_DATAGOV} \
@@ -50,13 +51,6 @@
     $ gcloud beta billing projects link ${PROJECT_DATASTO} \
     --billing-account=${BILLING_ID}
 
-    ```
-
-
-4.  Clone this repository in Cloud Shell
-
-    ```shell
-    git clone https://github.com/mansim07/datamesh-on-gcp
     ```
 
 5.  Install necessary python libraries
@@ -98,7 +92,8 @@
 
 ## Lab 10: Data Lineage 
 
-## Lab 11: Orcehstrate using Composer
+## Lab 11: Orcehstrate using Composer [Jay]
+gsutil cp ./dag ./composer 
 
 
 ## Clean up 
