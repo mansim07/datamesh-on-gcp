@@ -393,6 +393,11 @@ resource "null_resource" "gsutil_resources" {
     command = <<-EOT
       cd ../resources/marsbank-datagovernance-process
       gsutil -u ${var.project_id} cp gs://dataplex-dataproc-templates-artifacts/* ./common/.
+      cp ../../../../demo_artifacts/libs/tagmanager-1.0-SNAPSHOT.jar ./common/.
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_information
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_classification
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_quality
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} global data_product_exchange
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }

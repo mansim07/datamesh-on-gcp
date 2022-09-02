@@ -29,11 +29,34 @@ variable "merchants_curated_bucket_name" {}
 variable "transactions_curated_bucket_name" {}
 variable "datastore_project_id" {}
 
-resource "null_resource" "register_gcs_assets3" {
+resource "null_resource" "register_gcs_assets1" {
  for_each = {
     "transactions-ref-raw-data/Transactions Ref Raw Data/transactions-raw-zone/prod-transactions-source-domain" : var.transactions_ref_bucket_name,
     "transactions-raw-data/Transactions Raw Data/transactions-raw-zone/prod-transactions-source-domain" : var.transactions_bucket_name,
     "merchant-raw-data/Merchant Raw Data/merchant-raw-zone/prod-merchant-source-domain" : var.merchants_bucket_name,
+  }
+  provisioner "local-exec" {
+    command = format("gcloud dataplex assets create %s --csv-header-rows=1 --csv-delimiter=\"|\" --location=%s --lake=%s --zone=%s --resource-type=STORAGE_BUCKET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
+                     element(split("/", each.key), 0),
+                     var.location,
+                     element(split("/", each.key), 3),
+                     element(split("/", each.key), 2),
+                     "projects/${var.datastore_project_id}/buckets/${each.value}",
+                     element(split("/", each.key), 1),
+                     )
+  }
+}
+
+#sometimes we get API rate limit errors for dataplex; add wait until this is resolved.
+resource "time_sleep" "sleep_after_assets" {
+  create_duration = "60s"
+
+  depends_on = [null_resource.create_zones_nolabels]
+}
+
+
+resource "null_resource" "register_gcs_assets2" {
+ for_each = {
     "customer-raw-data/Customer Raw Data/customer-raw-zone/prod-customer-source-domain" : var.customers_bucket_name
     "transactions-curated-data/Transactions Curated Data/transactions-curated-zone/prod-transactions-source-domain" : var.transactions_curated_bucket_name,
     "merchant-curated-data/Merchant Curated Data/merchant-curated-zone/prod-merchant-source-domain" : var.merchants_curated_bucket_name,
@@ -49,5 +72,7 @@ resource "null_resource" "register_gcs_assets3" {
                      element(split("/", each.key), 1),
                      )
   }
-}
 
+  depends_on  = [time_sleep.sleep_after_assets]
+
+}
