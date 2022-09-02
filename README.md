@@ -57,20 +57,20 @@
     ```shell
     source ~/.profile 
 
-    $ gcloud projects create ${PROJECT_DATAGOV} \
+    gcloud projects create ${PROJECT_DATAGOV} \
     --organization=${ORG_ID}
 
-    $ gcloud projects create ${PROJECT_DATASTO} \
+    gcloud projects create ${PROJECT_DATASTO} \
     --organization=${ORG_ID}
 
     ```
 
 * Associate the project with the billing ID.
     ```shell
-    $ gcloud beta billing projects link ${PROJECT_DATAGOV} \
+    gcloud beta billing projects link ${PROJECT_DATAGOV} \
     --billing-account=${BILLING_ID}
 
-    $ gcloud beta billing projects link ${PROJECT_DATASTO} \
+    gcloud beta billing projects link ${PROJECT_DATASTO} \
     --billing-account=${BILLING_ID}
 
     ```
