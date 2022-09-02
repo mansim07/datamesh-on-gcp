@@ -247,12 +247,16 @@ resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
 
 resource "google_bigquery_dataset" "bigquery_datasets" {
   for_each = toset([ 
-    "raw_data",
-    "merchants_reference_data",
-    "source_data",
-    "lookup_data",
+    "prod_auth_data_product",
+    "prod_auth_ref_data",
+    "prod_cc_analytics_data_product",
+    "prod_customer_data_product",
+    "prod_customer_private",
+    "prod_customer_ref_data",
     "prod_customer_refined_data",
-    "prod_merchant_refined_data",
+    "prod_merchants_data_product",
+    "prod_merchants_ref_data",
+    "prod_merchants_refined_data",
     "prod_pos_auth_refined_data"
   ])
   project                     = var.project_id
@@ -274,20 +278,16 @@ resource "random_integer" "jobid" {
 
 resource "google_bigquery_job" "job" {
   for_each = {
-    "raw_data.customer_demographics" : format("gs://%s/customers_data/dt=%s/customer.csv", var.customers_bucket_name, var.date_partition),
-    "raw_data.cc_customer_data" : format("gs://%s/cc_customers_data/dt=%s/cc_customer.csv", var.customers_bucket_name, var.date_partition),
-    "raw_data.core_merchants" : format("gs://%s/merchants_data/dt=%s/merchants.csv", var.merchants_bucket_name, var.date_partition),
-    "merchants_reference_data.mcc_code" : format("gs://%s/merchants_data/dt=%s/mcc_codes/mcc_codes.csv", var.merchants_bucket_name, var.date_partition),
-    "source_data.auth_table" : format("gs://%s/auth_data/dt=%s/trans_data.csv", var.transactions_bucket_name, var.date_partition),
-    "lookup_data.signature" : format("gs://%s/ref_data/signature/signature.csv", var.transactions_ref_bucket_name),
-    "lookup_data.card_type_facts" : format("gs://%s/ref_data/card_type_facts/card_type_facts.csv", var.transactions_ref_bucket_name),
-    "lookup_data.payment_methods" : format("gs://%s/ref_data/payment_methods/payment_methods.csv", var.transactions_ref_bucket_name),
-    "lookup_data.events_type" : format("gs://%s/ref_data/events_type/events_type.csv", var.transactions_ref_bucket_name),
-    "lookup_data.currency" : format("gs://%s/ref_data/currency/currency.csv", var.transactions_ref_bucket_name),
-    "lookup_data.swiped_code" : format("gs://%s/ref_data/swiped_code/swiped_code.csv", var.transactions_ref_bucket_name),
-    "lookup_data.origination_code" : format("gs://%s/ref_data/origination_code/origination_code.csv", var.transactions_ref_bucket_name),
-    "lookup_data.trans_type" : format("gs://%s/ref_data/trans_type/trans_type.csv", var.transactions_ref_bucket_name),
-    "lookup_data.card_read_type" : format("gs://%s/ref_data/card_read_type/card_read_type.csv", var.transactions_ref_bucket_name)
+    "prod_merchants_ref_data.mcc_code" : format("gs://%s/merchants_data/dt=%s/mcc_codes/mcc_codes.csv", var.merchants_bucket_name, var.date_partition),
+    "prod_auth_ref_data.signature" : format("gs://%s/ref_data/signature/signature.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.card_type_facts" : format("gs://%s/ref_data/card_type_facts/card_type_facts.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.payment_methods" : format("gs://%s/ref_data/payment_methods/payment_methods.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.events_type" : format("gs://%s/ref_data/events_type/events_type.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.currency" : format("gs://%s/ref_data/currency/currency.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.swiped_code" : format("gs://%s/ref_data/swiped_code/swiped_code.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.origination_code" : format("gs://%s/ref_data/origination_code/origination_code.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.trans_type" : format("gs://%s/ref_data/trans_type/trans_type.csv", var.transactions_ref_bucket_name),
+    "prod_auth_ref_data.card_read_type" : format("gs://%s/ref_data/card_read_type/card_read_type.csv", var.transactions_ref_bucket_name)
   }
   job_id     = format("job_load_%s_${random_integer.jobid.result}", element(split(".", each.key), 1))
   project    = var.project_id

@@ -6,7 +6,7 @@
 
 3.  Clone this repository in Cloud Shell
 
-    ```shell
+    ```bash
     git clone https://github.com/mansim07/datamesh-on-gcp
     ```
 
@@ -14,28 +14,28 @@
 
     Make sure you run the RAND once and capture the  value 
 
-    ``` 
+    ```bash
     echo $(((RND=RANDOM<<15|RANDOM)))
     ```
 
-    Replace the necessary values and execute the below commands
+    Replace the necessary values **before you execute the below 2 commands** 
     
-    ```
-    echo "export RAND_ID=<replace-value-from-above>" >> ~/.profile
-    ```
-
-    ```
-    echo "export USERNAME=<your-corp-email-without-@google.com>" >> ~/.profile
+    ```bash
+    echo "export RAND_ID=replace-value-from-above" >> ~/.profile
     ```
 
-    Copy and execute 
+    ```bash
+    echo "export USERNAME=your-corp-email-without-@google.com" >> ~/.profile
     ```
+
+    Copy and execute the below commands. No changes are needed. 
+    ```bash
 
     source ~/.profile 
 
-    echo "export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}" >> ~/.profile
+    echo "export PROJECT_DATAGOV=mbdatagov-${RAND_ID}" >> ~/.profile
 
-    echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
+    echo "export PROJECT_DATASTO=mbdatastore-${RAND_ID}" >> ~/.profile
 
     echo "export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format='value(name)')"  >> ~/.profile
 
@@ -44,7 +44,7 @@
     ```
 5. Validate the environment variables 
 
-    ```
+    ```bash
     cat ~/.profile 
     ```
 
@@ -54,7 +54,7 @@
 
 6. Create two new projects with the assigned billing account using the below commands: 
   * Create the projects 
-    ```shell
+    ```bash
     source ~/.profile 
 
     gcloud projects create ${PROJECT_DATAGOV} \
@@ -66,7 +66,7 @@
     ```
 
 * Associate the project with the billing ID.
-    ```shell
+    ```bash
     gcloud beta billing projects link ${PROJECT_DATAGOV} \
     --billing-account=${BILLING_ID}
 
@@ -77,7 +77,7 @@
 
 7.  Install necessary python libraries
      
-     ```shell
+     ```bash
     pip3 install google-cloud-storage
     pip3 install numpy
     pip3 install faker_credit_score
@@ -85,7 +85,7 @@
 
 8. Use Terraform to setup the rest of the environment
 
-    ```
+    ```bash
     cd ~/datamesh-on-gcp/oneclick/
 
     source ~/.profile  
