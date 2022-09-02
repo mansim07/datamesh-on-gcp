@@ -86,10 +86,10 @@
 8. Use Terraform to setup the rest of the environment
 
     ```
-    cd ./oneclick/
+    cd ~/datamesh-on-gcp/oneclick/
 
     source ~/.profile  
-    
+
     bash deploy_helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
 
     ```
