@@ -247,12 +247,16 @@ resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
 
 resource "google_bigquery_dataset" "bigquery_datasets" {
   for_each = toset([ 
-    "raw_data",
-    "merchants_reference_data",
-    "source_data",
-    "lookup_data",
+    "prod_auth_data_product",
+    "prod_auth_ref_data",
+    "prod_cc_analytics_data_product",
+    "prod_customer_data_product",
+    "prod_customer_private",
+    "prod_customer_ref_data",
     "prod_customer_refined_data",
-    "prod_merchant_refined_data",
+    "prod_merchants_data_product",
+    "prod_merchants_ref_data",
+    "prod_merchants_refined_data",
     "prod_pos_auth_refined_data"
   ])
   project                     = var.project_id
