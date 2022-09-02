@@ -37,9 +37,9 @@
 
     echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
 
-    echo "export ORG_ID=$(gcloud organizations list --filter='displayName~${USERNAME}' --format='value(name)')"  >> ~/.profile
+    echo "export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format='value(name)')"  >> ~/.profile
 
-    echo "export BILLING_ID=$(gcloud beta billing accounts list --filter='displayName~${USERNAME}' --format='value(name)')" >> ~/.profile
+    echo "export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format='value(name)')" >> ~/.profile
 
     ```
 
