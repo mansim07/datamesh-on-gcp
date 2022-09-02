@@ -4,34 +4,53 @@
 
 2. Open Cloud Shell while logged in as admin@.
 
-2. Create two new projects with the assigned billing account using the below method. One for data storage (called datastore from now on) and one for data governance (called datagov from now on)
- 
-    substitute {username} with your actual username (your corp email without @google.com), or the SMO sub-domain
-    
-* Find the organization ID.
-    ```shell
-    $ gcloud organizations list \
-    --filter="displayName~{username}" \
-    --format="value(name)"
+3. set up the environment variables.
+
+    Make sure you run the RAND once and capture the  value 
+
+    ``` 
+    echo $(((RND=RANDOM<<15|RANDOM)))
+    ```
+    Set the static values 
+
+    ```
+    export RAND_ID=<value-from-above>
+    export USERNAME=<your-corp-email-without-@google.com>
     ```
 
-* Create a new project using a unique project ID string.
-    ```shell
-    $ gcloud projects create {proj-id} \
-    --organization={org-id}
+    Copy and execute 
+    ```
+    export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}
+
+    export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}
+
+    export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format="value(name)")
+
+    export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format="value(name)")
+
     ```
 
-* Find the billing ID.
+
+
+3. Create two new projects with the assigned billing account using the below commands: 
+  * Create the projects 
     ```shell
-    $ gcloud beta billing accounts list \
-    --filter="displayName~${username}" \
-    --format="value(name)"
+    $ gcloud projects create ${PROJECT_DATAGOV} \
+    --organization=${ORG_ID}
+
+    $ gcloud projects create ${PROJECT_DATASTO} \
+    --organization=${ORG_ID}
+
     ```
 
 * Associate the project with the billing ID.
     ```shell
-    $ gcloud beta billing projects link {proj-id} \
-    --billing-account={billing-id}
+    $ gcloud beta billing projects link ${PROJECT_DATAGOV} \
+    --billing-account=${BILLING_ID}
+
+    $ gcloud beta billing projects link ${PROJECT_DATASTO} \
+    --billing-account=${BILLING_ID}
+
     ```
 
 
@@ -63,7 +82,7 @@
 
 ## Lab 6: Data Refinement & Movement 
 
-## Lab 7: Builing Data Products
+## Lab 7: Building Data Products
 
 ## Lab 8: Tag templates & Bulk Tagging
 
