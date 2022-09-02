@@ -16,8 +16,14 @@
 
     ``` 
     echo $(((RND=RANDOM<<15|RANDOM)))
-    export RAND_ID=<value-from-above>
-    export USERNAME=<your-corp-email-without-@google.com>
+    ```
+
+    Replace the necessary values and execute the below commands
+    
+    ```
+    echo "export RAND_ID=<replace-value-from-above>" >> ~/.profile
+
+    echo "export USERNAME=<your-corp-email-without-@google.com>" >> ~/.profile
     ```
 
     Copy and execute 
