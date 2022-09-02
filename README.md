@@ -48,7 +48,7 @@
     cat ~/.profile 
     ```
 
-    [[/demo_artifacts/imgs/validate-profile.png|alt=octocat]]
+    ![profile](/demo_artifacts/imgs/validate-profile.png)
 
 
 
