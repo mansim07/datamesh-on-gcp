@@ -33,9 +33,9 @@
 
     source ~/.profile 
 
-    echo "export PROJECT_DATAGOV=mb-dgovernance-${RAND_ID}" >> ~/.profile
+    echo "export PROJECT_DATAGOV=mbdatagov-${RAND_ID}" >> ~/.profile
 
-    echo "export PROJECT_DATASTO=mb-dstorage-${RAND_ID}" >> ~/.profile
+    echo "export PROJECT_DATASTO=mbdatastore-${RAND_ID}" >> ~/.profile
 
     echo "export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format='value(name)')"  >> ~/.profile
 
