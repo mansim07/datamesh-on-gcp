@@ -30,7 +30,7 @@
     ```
 
     source ~/.profile 
-    
+
     echo "export PROJECT_DATAGOV=mbank-datagovernance-${RAND_ID}" >> ~/.profile
 
     echo "export PROJECT_DATASTO=mbank-datastorage-${RAND_ID}" >> ~/.profile
@@ -44,6 +44,8 @@
 5. Create two new projects with the assigned billing account using the below commands: 
   * Create the projects 
     ```shell
+    source ~/.profile 
+    
     $ gcloud projects create ${PROJECT_DATAGOV} \
     --organization=${ORG_ID}
 
