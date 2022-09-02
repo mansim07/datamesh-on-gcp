@@ -68,72 +68,13 @@
     ```
 
 6. Use Terraform to setup the rest of the environment
- * Go to org policy directory 
-    ```
-    cd  ./oneclick/org_policy
-    ```
-* Set the gcloud project id 
-    ```
-    gcloud config set project ${PROJECT_DATASTO}
-    ```
-*  Initialze terraform
-    ```
-    terraform init
-    ```
-*  Apply terraform
-    ```
-    terraform apply -auto-approve -var project_id=${PROJECT_DATASTO}
-    ```
-*  Clean up
-    ```
-    rm terraform*
-    ```
-* Now switch the governance project
-    ```
-    gcloud config set project ${PROJECT_DATAGOV}
-    ```
-* Initialize tf 
-    ````
-    terraform init
-    ```
-* Tf apply 
 
     ```
-    terraform apply -auto-approve -var project_id=${PROJECT_DATAGOV}
-    ```
-* Go to the terraform directory   
-    ```
-    cd ./oneclick/demo-store/terraform project
-    ```
-* Set the project to the data storage 
-   ```
-    gcloud config set project ${PROJECT_DATASTO}
-   ```
-* Initialize Init  
-    ```
-    terraform init
-    ```
-* Apply  Tf. To get your public ip address from the command line run: curl https://ipinfo.io/ip
-    ```
-    terraform apply -auto-approve -var rand=${RAND} -var project_id=${PROJECT_DATASTO}  -var 'org_id=${ORG_ID}' -var 'user_ip_range=10.6.0.0/24'
-    ```
-* Switch the directory 
-    ```
-    cd ./oneclick/demo-gov/terraform
-    ```
-* Switch back to the datagov project 
-   ```
-   gcloud config set project ${PROJECT_DATAGOV}
-   ```
-* tf init 
-    ```
-    terraform init
-    ```
-* tf apply. To get your public ip address from the command line run: curl https://ipinfo.io/ip
-    ```
-    terraform apply -auto-approve -var rand=${RAND} -var project_id=${PROJECT_DATAGOV} -var datastore_project_id=${PROJECT_DATASTO} -var 'org_id=${PROJECT_DATASTO} -var 'user_ip_range=10.6.0.0/24'
+    cd ./oneclick/
 
+    bash deploy_helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
 
+    ```
 
 ## Lab 2: Data Classification using DLP
 
@@ -143,13 +84,13 @@
 
 ## Lab 5: Data Curation
 
+[Data Curation Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
+
 ## Lab 6: Data Quality
 
 [Data Quality Lab Instructions](https://docs.google.com/document/d/17m6bBAVf51q3tvo7hdjBElac32_t8FR3olZH6vTOYhs/edit#heading=h.10b13csq101)
 
 ## Lab 7: Data Refinement & Movement 
-
-[Data Refinement Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
 
 ## Lab 8: Building Data Products
 
@@ -162,15 +103,8 @@
 
 ## Clean up 
 
-## Multiple Runs and/or cleanup: (This DOES NOT WORK at the moment; lake deletion doesn't delete child objects).
+delete the projects 
 
-- You can run terraform destory as shown below but note that the Lake/Zones/Assets will not be destroyed.
--- as of this version, you will have to create a new project if the Lakes, Zones, or Assets were successfully created.
--- To run terraform destroy: 
-1. cd to the ./oneclick/org_policy folder
-2. run:  terraform destroy -auto-approve -var project_id=&lt;your-project-id&gt;
-3. cd to the ./oneclick/demo/terraform project
-4. terraform destroy -auto-approve -var project_id=&lt;your-project-id&gt; -var 'org_id=&lt;your-ldap&gt;.altostrat.com' -var 'user_ip_range=10.6.0.0/24'
 
 
 

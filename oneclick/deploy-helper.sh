@@ -1,18 +1,20 @@
 #!/bin/bash
 #set -x
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 4 ]; then
     echo "Illegal number of parameters"
-    echo "Usage: ./deploy_helper.sh <datastore-projectid> <datagov-projectid> <ldap>"
-    echo "Example: ./deploy_helper.sh my-datastore my-datagov jayoleary"
+    echo "Usage: ./deploy_helper.sh <datastore-projectid> <datagov-projectid> <ldap> <randid>"
+    echo "Example: ./deploy_helper.sh my-datastore my-datagov jayoleary 123"
     exit 1
 fi
 GCP_DATASTORE_PROJECT_ID=$1
 GCP_DATAGOV_PROJECT_ID=$2
 GCP_ARGOLIS_LDAP=$3
+RAND=$4
 
-git clone https://github.com/mansim07/datamesh-on-gcp
+#git clone https://github.com/mansim07/datamesh-on-gcp
 
-RAND=$(((RND=RANDOM<<15|RANDOM)))
+#RAND=$(((RND=RANDOM<<15|RANDOM)))
+
 
 
 echo "${GCP_DATASTORE_PROJECT_ID}"
