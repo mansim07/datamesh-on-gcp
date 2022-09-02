@@ -88,6 +88,8 @@
     ```
     cd ./oneclick/
 
+    source ~/.profile  
+    
     bash deploy_helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
 
     ```
