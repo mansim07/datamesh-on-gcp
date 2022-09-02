@@ -22,7 +22,9 @@
     
     ```
     echo "export RAND_ID=<replace-value-from-above>" >> ~/.profile
+    ```
 
+    ```
     echo "export USERNAME=<your-corp-email-without-@google.com>" >> ~/.profile
     ```
 
@@ -45,7 +47,7 @@
   * Create the projects 
     ```shell
     source ~/.profile 
-    
+
     $ gcloud projects create ${PROJECT_DATAGOV} \
     --organization=${ORG_ID}
 
