@@ -101,6 +101,7 @@
 ## Lab 3: Discover Metadata
 
 ## Lab 4: Manging Security
+[Dataplex Security Lab](https://docs.google.com/document/d/1nTxmFyOp7DvNreaDKZ_92u8K-dot6N1fTqkLrlDsSt8/edit#)
 
 ## Lab 5: Data Curation
 
