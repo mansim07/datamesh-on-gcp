@@ -25,15 +25,15 @@ locals {
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_customers_raw_data", local._bucket_prefix_first_element)
-  _customers_curated_bucket_name  = format("%s_customers_curated_data", local._bucket__prefix_first_element)
-  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._bucket__prefix_first_element)
-  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._bucket__prefix_first_element)
-  _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._bucket__prefix_first_element)
-  _merchants_bucket_name          = format("%s_merchants_raw_data", local._bucket__prefix_first_element)
-  _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._bucket__prefix_first_element)
-  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._bucket__prefix_first_element) 
-  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._bucket__prefix_first_element) 
+  _customers_bucket_name          = format("%s_customers_raw_data", local._bucket_prefix)
+  _customers_curated_bucket_name  = format("%s_customers_curated_data", local._bucket_prefix)
+  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._bucket_prefix)
+  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._bucket_prefix)
+  _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._bucket_prefix)
+  _merchants_bucket_name          = format("%s_merchants_raw_data", local._bucket_prefix)
+  _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._bucket_prefix)
+  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._bucket_prefix) 
+  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._bucket_prefix) 
 }
 
 provider "google" {
