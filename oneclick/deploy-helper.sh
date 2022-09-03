@@ -15,7 +15,7 @@ echo "${GCP_DATASTORE_PROJECT_ID}"
 cd ~/datamesh-on-gcp/oneclick/org_policy
 gcloud config set project ${GCP_DATASTORE_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var project_id_governance=${GCP_DATAGOV_PROJECT_ID}
+terraform apply -auto-approve -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var project_id_governance=${GCP_DATAGOV_PROJECT_ID}
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
 
