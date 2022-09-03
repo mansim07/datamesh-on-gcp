@@ -22,11 +22,35 @@
 #############################################################################################################################################################
 
 /******************************************
-1. Project Services Configuration
+1. Activate APIs - Data Storage Project
  *****************************************/
 module "activate_service_apis" {
   source                      = "terraform-google-modules/project-factory/google//modules/project_services"
-  project_id                     = var.project_id
+  project_id                     = var.project_id_storage
+  enable_apis                 = true
+
+  activate_apis = [
+    "orgpolicy.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "containerregistry.googleapis.com",
+    "bigquery.googleapis.com", 
+    "storage.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "dlp.googleapis.com"
+    ]
+
+  disable_services_on_destroy = false
+  
+}
+
+
+/******************************************
+1. Project Services Configuration - Data Governance Project 
+ *****************************************/
+module "activate_service_apis" {
+  source                      = "terraform-google-modules/project-factory/google//modules/project_services"
+  project_id                     = var.project_id_governance
   enable_apis                 = true
 
   activate_apis = [
@@ -42,13 +66,13 @@ module "activate_service_apis" {
     "dataplex.googleapis.com",
     "datacatalog.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "composer.googleapis.com",
-    "dlp.googleapis.com"
+    "composer.googleapis.com"
     ]
 
   disable_services_on_destroy = false
   
 }
+
 
 /*******************************************
 Introducing sleep to minimize errors from
@@ -63,7 +87,7 @@ resource "time_sleep" "sleep_after_activate_service_apis" {
 }
 
 /******************************************
-2. Project-scoped Org Policy Relaxing
+2. Project-scoped Org Policy Relaxing - Data Storage Project
 *****************************************/
 
 resource "google_project_organization_policy" "bool-policies" {
@@ -72,7 +96,7 @@ resource "google_project_organization_policy" "bool-policies" {
     "compute.disableSerialPortLogging" : false,
     "compute.requireShieldedVm" : false
   }
-  project    = var.project_id
+  project    = var.project_id_storage
   constraint = format("constraints/%s", each.key)
   boolean_policy {
     enforced = each.value
@@ -91,7 +115,51 @@ resource "google_project_organization_policy" "list_policies" {
     "compute.restrictVpcPeering" : true
     "compute.trustedImageProjects" : true
   }
-  project     = var.project_id
+  project     = var.project_id_storage
+  constraint = format("constraints/%s", each.key)
+  list_policy {
+    allow {
+      all = each.value
+    }
+  }
+
+  depends_on = [
+    time_sleep.sleep_after_activate_service_apis
+  ]
+
+}
+
+
+/******************************************
+4. Project-scoped Org Policy Relaxing - Data Governance Project
+*****************************************/
+
+resource "google_project_organization_policy" "bool-policies" {
+  for_each = {
+    "compute.requireOsLogin" : false,
+    "compute.disableSerialPortLogging" : false,
+    "compute.requireShieldedVm" : false
+  }
+  project    = var.project_id_governance
+  constraint = format("constraints/%s", each.key)
+  boolean_policy {
+    enforced = each.value
+  }
+
+  depends_on = [
+    time_sleep.sleep_after_activate_service_apis
+  ]
+
+}
+
+resource "google_project_organization_policy" "list_policies" {
+  for_each = {
+    "compute.vmCanIpForward" : true,
+    "compute.vmExternalIpAccess" : true,
+    "compute.restrictVpcPeering" : true
+    "compute.trustedImageProjects" : true
+  }
+  project     = var.project_id_governance
   constraint = format("constraints/%s", each.key)
   list_policy {
     allow {
