@@ -1,8 +1,14 @@
-variable "project_id" {
+variable "project_id_governance" {
   type        = string
   description = "project id required"
 }
 
+
+variable "ldap" {
+ description = "Individual ldap"
+}
+
+/*
 variable "org_id" {
  description = "Organization ID in which project created"
 }
@@ -10,8 +16,9 @@ variable "org_id" {
 variable "rand" {
   description = "random number used for creating unique GCS bucket names"
 }
+*/
 
-variable "datastore_project_id" {
+variable "project_id_storage" {
   description = "project_id for the datastore project"
 }
 variable "location" {
@@ -40,7 +47,7 @@ variable "lake_name" {
 
 variable "date_partition" {
   description = "Date Partition to use for Data Generator Tool"
-  default = "2020-10-10"
+  default = "2022-05-01"
 }
 
 variable "tmpdir" {

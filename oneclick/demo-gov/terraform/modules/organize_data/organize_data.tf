@@ -20,11 +20,11 @@
 variable "project_id" {}
 variable "location" {}
 variable "lake_name" {}
-variable "metastore_service_name" {}
+#variable "metastore_service_name" {}
 variable "project_number" {}
 variable "datastore_project_id" {}
 
-
+/* With Metastore
 resource "null_resource" "create_lake" {
  for_each = {
     "prod-customer-source-domain/Customer - Source Domain" : "domain_type=source",
@@ -43,6 +43,28 @@ resource "null_resource" "create_lake" {
                      "projects/${var.project_id}/locations/${var.location}/services/${var.metastore_service_name}")
   }
 }
+*/
+
+resource "null_resource" "create_lake" {
+ for_each = {
+    "prod-customer-source-domain/Customer - Source Domain" : "domain_type=source",
+    "prod-merchant-source-domain/Merchant - Source Domain" : "domain_type=source",
+    "prod-transactions-source-domain/Transactions - Source Domain" : "domain_type=source",
+    "prod-transactions-consumer-domain/Credit Card Analytics - Consumer Domain" : "domain_type=consumer",
+    "central-operations-domain/Central Operations Domain" : "domain_type=operations"
+  }
+  provisioner "local-exec" {
+    command = format("gcloud dataplex lakes create --project=%s %s --display-name=\"%s\" --location=%s --labels=%s ", 
+                     var.project_id,
+                     element(split("/", each.key), 0),
+                     element(split("/", each.key), 1),
+                     var.location,
+                     each.value
+                     )
+  }
+}
+
+
 
 /* roles for dataplex service account in datastore project 
 + so that dataplex can read from buckets
