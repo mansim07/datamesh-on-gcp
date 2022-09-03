@@ -36,8 +36,8 @@ resource "null_resource" "register_gcs_assets1" {
     "merchant-raw-data/Merchant Raw Data/merchant-raw-zone/prod-merchant-source-domain" : var.merchants_bucket_name,
   }
   provisioner "local-exec" {
-    command = format("gcloud dataplex assets create %s --csv-header-rows=1 --csv-delimiter=\"|\" --location=%s --lake=%s --zone=%s --resource-type=STORAGE_BUCKET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
-                     element(split("/", each.key), 0),
+    command = format("gcloud dataplex assets --project=%s create %s --csv-header-rows=1 --csv-delimiter=\"|\" --location=%s --lake=%s --zone=%s --resource-type=STORAGE_BUCKET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
+                     var.project_id,element(split("/", each.key), 0),
                      var.location,
                      element(split("/", each.key), 3),
                      element(split("/", each.key), 2),
@@ -63,8 +63,8 @@ resource "null_resource" "register_gcs_assets2" {
     "customer-curated-data/Customer Curated Data/customer-curated-zone/prod-customer-source-domain" : var.customers_curated_bucket_name
   }
   provisioner "local-exec" {
-    command = format("gcloud dataplex assets create %s --csv-header-rows=1 --csv-delimiter=\"|\" --location=%s --lake=%s --zone=%s --resource-type=STORAGE_BUCKET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
-                     element(split("/", each.key), 0),
+    command = format("gcloud dataplex assets --project=%s create %s --csv-header-rows=1 --csv-delimiter=\"|\" --location=%s --lake=%s --zone=%s --resource-type=STORAGE_BUCKET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
+                     var.project_id,element(split("/", each.key), 0),
                      var.location,
                      element(split("/", each.key), 3),
                      element(split("/", each.key), 2),
