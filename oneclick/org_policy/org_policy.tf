@@ -42,7 +42,8 @@ module "activate_service_apis" {
     "dataplex.googleapis.com",
     "datacatalog.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "composer.googleapis.com" 
+    "composer.googleapis.com",
+    "dlp.googleapis.com"
     ]
 
   disable_services_on_destroy = false
