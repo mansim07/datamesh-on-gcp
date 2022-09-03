@@ -278,7 +278,7 @@ resource "random_integer" "jobid" {
 
 resource "google_bigquery_job" "job" {
   for_each = {
-    "prod_merchants_ref_data.mcc_code" : format("gs://%s/merchants_data/dt=%s/mcc_codes/mcc_codes.csv", var.merchants_bucket_name, var.date_partition),
+    "prod_merchants_ref_data.mcc_code" : format("gs://%s/mcc_codes/dt=%s/mcc_codes.csv", var.merchants_bucket_name, var.date_partition),
     "prod_auth_ref_data.signature" : format("gs://%s/ref_data/signature/signature.csv", var.transactions_ref_bucket_name),
     "prod_auth_ref_data.card_type_facts" : format("gs://%s/ref_data/card_type_facts/card_type_facts.csv", var.transactions_ref_bucket_name),
     "prod_auth_ref_data.payment_methods" : format("gs://%s/ref_data/payment_methods/payment_methods.csv", var.transactions_ref_bucket_name),

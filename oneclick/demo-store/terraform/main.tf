@@ -73,6 +73,7 @@ resource "google_compute_subnetwork" "main_subnet" {
   ip_cidr_range = var.ip_range
   region        = var.location
   network       = google_compute_network.default_network.id
+  private_ip_google_access = true
   depends_on = [
     google_compute_network.default_network,
   ]
