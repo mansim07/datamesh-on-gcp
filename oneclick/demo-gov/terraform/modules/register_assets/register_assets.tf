@@ -54,7 +54,6 @@ resource "time_sleep" "sleep_after_assets" {
   depends_on = [null_resource.register_gcs_assets1]
 }
 
-
 resource "null_resource" "register_gcs_assets2" {
  for_each = {
     "customer-raw-data/Customer Raw Data/customer-raw-zone/prod-customer-source-domain" : var.customers_bucket_name
@@ -78,18 +77,20 @@ resource "null_resource" "register_gcs_assets2" {
 }
 
 
+#sometimes we get API rate limit errors for dataplex; add wait until this is resolved.
+resource "time_sleep" "sleep_after_gcs_assets2" {
+  create_duration = "60s"
+
+  depends_on = [null_resource.register_gcs_assets2]
+}
+
 
 resource "null_resource" "register_bq_assets1" {
  for_each = {
     "customer-data-product/Customer Data Product/customer-data-product-zone/prod-customer-source-domain" : "customer_data_product",
     "customer-data-product-reference/Customer Reference Data Product/customer-data-product-zone/prod-customer-source-domain" : "customer_ref_data" ,
      "customer-refined-data/Customer Refined Data/customer-curated-zone/prod-customer-source-domain" : "customer_refined_data" ,
-    "merchant-refined-data/Merchant Refined Data/merchant-curated-zone/prod-merchant-source-domain" : "merchants_refined_data",
-    "merchant-data-products/Merchant Data Product/merchant-data-product-zone/prod-merchant-source-domain" : "merchants_data_product",
-    "merchant-ref-product/Merchant Data Product Reference/merchant-data-product-zone/prod-merchant-source-domain" : "merchants_ref_data",
-    "transactions-data-product/Transactions Data Product/transactions-data-product-zone/prod-transactions-source-domain" : "auth_data_product",
-    "transaction-ref-product/Transactions Data Product Reference/transactions-data-product-zone/prod-transactions-source-domain" : "auth_ref_data",
-     "cc-analytics-data-product/CCA Data Product/data-product-zone/prod-transactions-consumer-domain" : "cc_analytics_data_product ",
+    "merchant-refined-data/Merchant Refined Data/merchant-curated-zone/prod-merchant-source-domain" : "merchants_refined_data"
     
   }
   provisioner "local-exec" {
@@ -103,14 +104,43 @@ resource "null_resource" "register_bq_assets1" {
                      )
   }
 
-  depends_on  = [time_sleep.register_gcs_assets2]
+  depends_on  = [time_sleep.sleep_after_gcs_assets2]
 
+}
+
+resource "null_resource" "register_bq_assets2" {
+ for_each = {
+    "merchant-data-products/Merchant Data Product/merchant-data-product-zone/prod-merchant-source-domain" : "merchants_data_product",
+    "merchant-ref-product/Merchant Data Product Reference/merchant-data-product-zone/prod-merchant-source-domain" : "merchants_ref_data",
+    "transactions-data-product/Transactions Data Product/transactions-data-product-zone/prod-transactions-source-domain" : "auth_data_product",
+    "transaction-ref-product/Transactions Data Product Reference/transactions-data-product-zone/prod-transactions-source-domain" : "auth_ref_data",
+     "cc-analytics-data-product/CCA Data Product/data-product-zone/prod-transactions-consumer-domain" : "cc_analytics_data_product "
+  }
+  provisioner "local-exec" {
+    command = format("gcloud dataplex assets --project=%s create %s --location=%s --lake=%s --zone=%s --resource-type=BIGQUERY_DATASET --resource-name=%s --discovery-enabled --display-name=\"%s\"", 
+                     var.project_id,element(split("/", each.key), 0),
+                     var.location,
+                     element(split("/", each.key), 3),
+                     element(split("/", each.key), 2),
+                     "projects/${var.datastore_project_id}/datasets/${each.value}",
+                     element(split("/", each.key), 1),
+                     )
+  }
+
+  depends_on  = [null_resource.register_gcs_assets2]
+
+}
+
+#sometimes we get API rate limit errors for dataplex; add wait until this is resolved.
+resource "time_sleep" "sleep_after_bq_assets2" {
+  create_duration = "60s"
+
+  depends_on = [null_resource.register_bq_assets2]
 }
 
 
 
-
-resource "null_resource" "register_bq_assets2" {
+resource "null_resource" "register_bq_assets3" {
  for_each = {
     
     "dlp-reports/DLP Reports/operations-data-product-zone/central-operations-domain" : "central_dlp_data" ,
@@ -131,13 +161,13 @@ resource "null_resource" "register_bq_assets2" {
                      )
   }
 
-  depends_on  = [time_sleep.sleep_after_assets]
+  depends_on  = [time_sleep.sleep_after_bq_assets2]
 
 }
 
 
 
-resource "null_resource" "register_gcs_assets2" {
+resource "null_resource" "register_gcs_assets3" {
  for_each = {
       "common-utilities/COMMON UTILITIES/common-utilities/central-operations-domain" : format("%s_dataplex_process" ,var.project_id)
   }
@@ -152,6 +182,6 @@ resource "null_resource" "register_gcs_assets2" {
                      )
   }
 
-  depends_on  = [time_sleep.sleep_after_assets]
+  depends_on  = [null_resource.register_bq_assets3]
 
 }
