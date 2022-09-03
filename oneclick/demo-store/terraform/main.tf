@@ -18,20 +18,20 @@
 
 locals {
   _prefix = var.project_id
-  _prefix_first_element           = element(split("-", local._prefix), 0)
-  _useradmin_fqn                  = format("admin@%s", var.org_id)
+  _prefix_first_element           =  local._prefix #element(split("-", local._prefix), 0)
+  #_useradmin_fqn                  = format("admin@%s", var.org_id)
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_%s_customers_raw_data", local._prefix_first_element, var.rand)
-  _customers_curated_bucket_name  = format("%s_%s_customers_curated_data", local._prefix_first_element, var.rand)
-  _transactions_bucket_name       = format("%s_%s_trasactions_raw_data", local._prefix_first_element, var.rand)
-  _transactions_curated_bucket_name  = format("%s_%s_trasactions_curated_data", local._prefix_first_element, var.rand)
-  _transactions_ref_bucket_name   = format("%s_%s_transactions_ref_raw_data", local._prefix_first_element, var.rand)
-  _merchants_bucket_name          = format("%s_%s_merchants_raw_data", local._prefix_first_element, var.rand)
-  _merchants_curated_bucket_name  = format("%s_%s_merchants_curated_data", local._prefix_first_element, var.rand)
-  _dataplex_process_bucket_name   = format("%s_%s_dataplex_process", local._prefix_first_element, var.rand) 
-  _dataplex_bqtemp_bucket_name    = format("%s_%s_dataplex_temp", local._prefix_first_element, var.rand) 
+  _customers_bucket_name          = format("%s_customers_raw_data", local._prefix_first_element)
+  _customers_curated_bucket_name  = format("%s_customers_curated_data", local._prefix_first_element)
+  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._prefix_first_element)
+  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._prefix_first_element)
+  _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._prefix_first_element)
+  _merchants_bucket_name          = format("%s_merchants_raw_data", local._prefix_first_element)
+  _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._prefix_first_element)
+  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._prefix_first_element) 
+  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._prefix_first_element) 
 }
 
 provider "google" {
@@ -46,7 +46,7 @@ locals {
   _project_number = data.google_project.project.number
 }
 
-
+/*
 ####################################################################################
 # Resource for Network Creation                                                    #
 # The project was not created with the default network.                            #
@@ -117,16 +117,19 @@ resource "google_compute_firewall" "user_firewall_rule" {
   ]
 }
 
+*/
+
 /*******************************************
 Introducing sleep to minimize errors from
 dependencies having not completed
 ********************************************/
+/*
 resource "time_sleep" "sleep_after_network_and_iam_steps" {
   create_duration = "120s"
   depends_on = [
                 google_compute_firewall.user_firewall_rule              ]
 }
-
+*/
 
 module "stage_data" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
@@ -144,6 +147,6 @@ module "stage_data" {
   transactions_curated_bucket_name      = local._transactions_curated_bucket_name
   transactions_ref_bucket_name          = local._transactions_ref_bucket_name
 
-  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
+  #depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 

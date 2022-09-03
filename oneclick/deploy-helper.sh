@@ -15,27 +15,16 @@ echo "${GCP_DATASTORE_PROJECT_ID}"
 cd ~/datamesh-on-gcp/oneclick/org_policy
 gcloud config set project ${GCP_DATASTORE_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var project_id=${GCP_DATASTORE_PROJECT_ID}
+terraform apply -auto-approve -var -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var project_id_governance=${GCP_DATAGOV_PROJECT_ID}
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
 
 rm terraform*
 
-
-gcloud config set project ${GCP_DATAGOV_PROJECT_ID}
-terraform init
-terraform apply -auto-approve -var project_id=${GCP_DATAGOV_PROJECT_ID}
-status=$?
-[ $status -eq 0 ] && echo "command successful" || exit 1
-
-rm terraform*
-
-cd ../../..
-pwd
 cd ~/datamesh-on-gcp/oneclick/demo-store/terraform
 gcloud config set project ${GCP_DATASTORE_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var rand=${RAND} -var project_id=${GCP_DATASTORE_PROJECT_ID} -var "org_id=${GCP_ARGOLIS_LDAP}.altostrat.com" -var 'user_ip_range=10.6.0.0/24'
+terraform apply -auto-approve -var project_id=${GCP_DATASTORE_PROJECT_ID}
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
 

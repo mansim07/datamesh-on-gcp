@@ -48,7 +48,7 @@ module "activate_service_apis" {
 /******************************************
 1. Project Services Configuration - Data Governance Project 
  *****************************************/
-module "activate_service_apis" {
+module "activate_service_apis_dg" {
   source                      = "terraform-google-modules/project-factory/google//modules/project_services"
   project_id                     = var.project_id_governance
   enable_apis                 = true
@@ -90,7 +90,7 @@ resource "time_sleep" "sleep_after_activate_service_apis" {
 2. Project-scoped Org Policy Relaxing - Data Storage Project
 *****************************************/
 
-resource "google_project_organization_policy" "bool-policies" {
+resource "google_project_organization_policy" "bool-policies-ds" {
   for_each = {
     "compute.requireOsLogin" : false,
     "compute.disableSerialPortLogging" : false,
@@ -108,7 +108,7 @@ resource "google_project_organization_policy" "bool-policies" {
 
 }
 
-resource "google_project_organization_policy" "list_policies" {
+resource "google_project_organization_policy" "list_policies-ds" {
   for_each = {
     "compute.vmCanIpForward" : true,
     "compute.vmExternalIpAccess" : true,
@@ -134,7 +134,7 @@ resource "google_project_organization_policy" "list_policies" {
 4. Project-scoped Org Policy Relaxing - Data Governance Project
 *****************************************/
 
-resource "google_project_organization_policy" "bool-policies" {
+resource "google_project_organization_policy" "bool-policies-dg" {
   for_each = {
     "compute.requireOsLogin" : false,
     "compute.disableSerialPortLogging" : false,
@@ -152,7 +152,7 @@ resource "google_project_organization_policy" "bool-policies" {
 
 }
 
-resource "google_project_organization_policy" "list_policies" {
+resource "google_project_organization_policy" "list_policies-dg" {
   for_each = {
     "compute.vmCanIpForward" : true,
     "compute.vmExternalIpAccess" : true,

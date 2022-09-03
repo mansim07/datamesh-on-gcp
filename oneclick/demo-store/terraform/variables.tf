@@ -3,13 +3,13 @@ variable "project_id" {
   description = "project id required"
 }
 
-variable "org_id" {
- description = "Organization ID in which project created"
-}
+#variable "org_id" {
+# description = "Organization ID in which project created"
+#}
 
-variable "rand" {
-  description = "random number used for creating unique GCS bucket names"
-}
+#variable "rand" {
+#  description = "random number used for creating unique GCS bucket names"
+#}
 
 variable "location" {
  description = "Location/region to be used"
@@ -21,9 +21,11 @@ variable "ip_range" {
  default = "10.6.0.0/24"
 }
 
+/*
 variable "user_ip_range" {
  description = "IP range for the user running the demo"
 }
+*/
 
 variable "hive_metastore_version" {
  description = "Version of hive to be used for the dataproc metastore"
@@ -37,7 +39,7 @@ variable "lake_name" {
 
 variable "date_partition" {
   description = "Date Partition to use for Data Generator Tool"
-  default = "2020-10-10"
+  default = "2022-05-"
 }
 
 variable "tmpdir" {
