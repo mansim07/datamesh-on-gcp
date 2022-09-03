@@ -72,7 +72,6 @@ module "activate_service_apis_dg" {
     "datapipelines.googleapis.com",
     "logging.googleapis.com",
     "cloudscheduler.googleapis.com",
-    "dataproc-control.googleapis.com",
     "monitoring.googleapis.com"
     ]
 
