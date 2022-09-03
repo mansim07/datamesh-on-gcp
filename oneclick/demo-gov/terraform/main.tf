@@ -24,15 +24,15 @@ locals {
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_%s_datastore_customers_raw_data", local._prefix_datastore_first_element, var.rand)
-  _customers_curated_bucket_name  = format("%s_%s_datastore_customers_curated_data", local._prefix_datastore_first_element, var.rand)
-  _transactions_bucket_name       = format("%s_%s_datastore_trasactions_raw_data", local._prefix_datastore_first_element,  var.rand)
-  _transactions_curated_bucket_name  = format("%s_%s_datastore_trasactions_curated_data", local._prefix_datastore_first_element, var.rand)
-  _transactions_ref_bucket_name   = format("%s_%s_datastore_transactions_ref_raw_data", local._prefix_datastore_first_element, var.rand)
-  _merchants_bucket_name          = format("%s_%s_datastore_merchants_raw_data", local._prefix_datastore_first_element, var.rand)
-  _merchants_curated_bucket_name  = format("%s_%s_datastore_merchants_curated_data", local._prefix_datastore_first_element, var.rand)
-  _dataplex_process_bucket_name   = format("%s_%s_datagov_dataplex_process", local._prefix_datastore_first_element, var.rand) 
-  _dataplex_bqtemp_bucket_name    = format("%s_%s_datagov_dataplex_temp", local._prefix_datastore_first_element, var.rand) 
+  _customers_bucket_name          = format("%s_%s_customers_raw_data", local._prefix_first_element, var.rand)
+  _customers_curated_bucket_name  = format("%s_%s_customers_curated_data", local._prefix_first_element, var.rand)
+  _transactions_bucket_name       = format("%s_%s_trasactions_raw_data", local._prefix_first_element, var.rand)
+  _transactions_curated_bucket_name  = format("%s_%s_trasactions_curated_data", local._prefix_first_element, var.rand)
+  _transactions_ref_bucket_name   = format("%s_%s_transactions_ref_raw_data", local._prefix_first_element, var.rand)
+  _merchants_bucket_name          = format("%s_%s_merchants_raw_data", local._prefix_first_element, var.rand)
+  _merchants_curated_bucket_name  = format("%s_%s_merchants_curated_data", local._prefix_first_element, var.rand)
+  _dataplex_process_bucket_name   = format("%s_%s_dataplex_process", local._prefix_first_element, var.rand) 
+  _dataplex_bqtemp_bucket_name    = format("%s_%s_dataplex_temp", local._prefix_first_element, var.rand) 
 }
 
 provider "google" {
@@ -281,7 +281,7 @@ resource "google_service_account_iam_binding" "data_admin_account_iam" {
 
 resource "google_compute_network" "default_network" {
   project                 = var.project_id
-  name                    = "vpc-main"
+  name                    = "default"
   description             = "Default network"
   auto_create_subnetworks = false
   mtu                     = 1460
@@ -295,10 +295,11 @@ resource "google_compute_network" "default_network" {
 
 resource "google_compute_subnetwork" "main_subnet" {
   project       = var.project_id
-  name          = format("%s-misc-subnet", local._prefix)
+  name          = "default"    #format("%s-misc-subnet", local._prefix)
   ip_cidr_range = var.ip_range
   region        = var.location
   network       = google_compute_network.default_network.id
+  private_ip_google_access = true
   depends_on = [
     google_compute_network.default_network,
   ]
@@ -310,7 +311,7 @@ resource "google_compute_subnetwork" "main_subnet" {
 
 resource "google_compute_firewall" "firewall_rule" {
   project  = var.project_id
-  name     = format("allow-intra-%s-misc-subnet", local._prefix)
+  name     = "allow-intra-default"    #format("allow-intra-%s-misc-subnet", local._prefix)
   network  = google_compute_network.default_network.id
 
   direction = "INGRESS"
@@ -327,7 +328,7 @@ resource "google_compute_firewall" "firewall_rule" {
 
 resource "google_compute_firewall" "user_firewall_rule" {
   project  = var.project_id
-  name     = format("allow-ingress-from-office-%s", local._prefix)
+  name     = "allow-ingress-from-office-default"   #format("allow-ingress-from-office-%s", local._prefix)
   network  = google_compute_network.default_network.id
 
   direction = "INGRESS"
@@ -389,6 +390,27 @@ resource "google_storage_bucket" "storage_bucket_bqtemp" {
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
 }
 
+
+####################################################################################
+# Create BigQuery Datasets
+####################################################################################
+
+resource "google_bigquery_dataset" "bigquery_datasets" {
+  for_each = toset([ 
+   "central_dlp_data",
+   "central_dq_data",
+   "central_dq_reports"
+  ])
+  project                     = var.project_id
+  dataset_id                  = each.key
+  friendly_name               = each.key
+  description                 = "${each.key} Dataset for Dataplex Demo"
+  location                    = var.location
+  delete_contents_on_destroy  = true
+  
+  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
+}
+
 resource "null_resource" "gsutil_resources" {
   provisioner "local-exec" {
     command = <<-EOT
@@ -398,7 +420,8 @@ resource "null_resource" "gsutil_resources" {
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_information
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_classification
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_quality
-      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} global data_product_exchange
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id} ${var.location} data_product_exchange
+      java -cp demo_artifacts/libs/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateDLPInspectionTemplate ${var.project_id} global marsbank_dlp_template
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }
