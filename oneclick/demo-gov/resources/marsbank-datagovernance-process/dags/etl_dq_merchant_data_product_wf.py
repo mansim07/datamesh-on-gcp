@@ -86,7 +86,7 @@ default_args = {
 }
 
 CREATE_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
-CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.prod_merchants_data_product.core_merchants`
+CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.merchants_data_product.core_merchants`
 (
   merchant_id STRING,
   merchant_name STRING,
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.prod_merchants_data_product.core_mer
 """
 
 INSERT_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
-INSERT INTO  `{PROJECT_ID_DW}.prod_merchants_data_product.core_merchants`
+INSERT INTO  `{PROJECT_ID_DW}.merchants_data_product.core_merchants`
 SELECT
 merchant_id ,
   merchant_name ,
@@ -150,10 +150,10 @@ merchant_id ,
   merchants.ingest_date  as ingest_date
 
 FROM
-`{PROJECT_ID_DW}.prod_merchants_refined_data.merchants_data` as merchants,
+`{PROJECT_ID_DW}.merchants_refined_data.merchants_data` as merchants,
   `bigquery-public-data.geo_us_boundaries.zip_codes` AS zip
 left outer join 
- `{PROJECT_ID_DW}.prod_merchants_ref_data.mcc_codes` mcc
+ `{PROJECT_ID_DW}.merchants_ref_data.mcc_codes` mcc
  on 
  merchants.mcc=mcc.mcc
  WHERE

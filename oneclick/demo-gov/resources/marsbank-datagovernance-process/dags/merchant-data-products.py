@@ -19,7 +19,7 @@ partition_date = models.Variable.get('merchant_partition_date')
 
 
 CREATE_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
-CREATE TABLE IF NOT EXISTS `{project_id_dw}.prod_merchants_data_product.core_merchants`
+CREATE TABLE IF NOT EXISTS `{project_id_dw}.merchants_data_product.core_merchants`
 (
   merchant_id STRING,
   merchant_name STRING,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `{project_id_dw}.prod_merchants_data_product.core_mer
 );
 """
 INSERT_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
-INSERT INTO  `{project_id_dw}.prod_merchants_data_product.core_merchants`
+INSERT INTO  `{project_id_dw}.merchants_data_product.core_merchants`
 SELECT
 merchant_id ,
   merchant_name ,
@@ -82,10 +82,10 @@ merchant_id ,
   merchants.ingest_date  as ingest_date
 
 FROM
-`{project_id_dw}.prod_merchants_refined_data.merchants_data` as merchants,
+`{project_id_dw}.merchants_refined_data.merchants_data` as merchants,
   `bigquery-public-data.geo_us_boundaries.zip_codes` AS zip
 left outer join 
- `{project_id_dw}.prod_merchants_ref_data.mcc_codes` mcc
+ `{project_id_dw}.merchants_ref_data.mcc_codes` mcc
  on 
  merchants.mcc=mcc.mcc
  WHERE
@@ -119,8 +119,8 @@ with models.DAG(
         schedule_interval=None,
         default_args=default_dag_args) as dag:
 
-    bq_create_merchant_prod_tbl = bigquery.BigQueryInsertJobOperator(
-        task_id="bq_create_merchant_prod_tbl",
+    bq_create_merchant_tbl = bigquery.BigQueryInsertJobOperator(
+        task_id="bq_create_merchant_tbl",
         impersonation_chain=IMPERSONATION_CHAIN,
         configuration={
             "query": {
@@ -130,8 +130,8 @@ with models.DAG(
         }
     )
 
-    bq_insert_merchant_prod_tbl = bigquery.BigQueryInsertJobOperator(
-        task_id="bq_insert_merchant_prod_tbl",
+    bq_insert_merchant_tbl = bigquery.BigQueryInsertJobOperator(
+        task_id="bq_insert_merchant_tbl",
         impersonation_chain=IMPERSONATION_CHAIN,
         configuration={
             "query": {
@@ -141,4 +141,4 @@ with models.DAG(
         }
     )
     
-    chain(bq_create_merchant_prod_tbl>>bq_insert_merchant_prod_tbl)
+    chain(bq_create_merchant_tbl>>bq_insert_merchant_tbl)

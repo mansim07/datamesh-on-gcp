@@ -16,7 +16,7 @@ partition_date = models.Variable.get('transactions_partition_date')
 
 CREATE_DP_CC_TRANS_ANALYTICS_DP = f"""
 CREATE TABLE IF NOT EXISTS
-  `{PROJECT_ID_DW}.prod_cc_analytics_data_product.credit_card_transaction_data` ( 
+  `{PROJECT_ID_DW}.cc_analytics_data_product.credit_card_transaction_data` ( 
     originating_event STRUCT<card_read_type STRUCT<code INT,
     entry_mode STRING>,
     trans_type STRUCT<trans_type INT64, 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS
 
 INSERT_DP_CC_TRANS_DATA = f"""
 INSERT INTO
-  `{PROJECT_ID_DW}.prod_cc_analytics_data_product.credit_card_transaction_data` (originating_event,
+  `{PROJECT_ID_DW}.cc_analytics_data_product.credit_card_transaction_data` (originating_event,
     card_info,
     merchant_info,
     customer_info,
@@ -117,13 +117,13 @@ SELECT
   NULL AS version,
   auth.ingest_date as ingest_date
 FROM
-  `{PROJECT_ID_DW}.prod_auth_data_product.auth_table` auth
+  `{PROJECT_ID_DW}.auth_data_product.auth_table` auth
 LEFT OUTER JOIN
-  `{PROJECT_ID_DW}.prod_customer_data_product.cc_customer_data` cc_cust
+  `{PROJECT_ID_DW}.customer_data_product.cc_customer_data` cc_cust
 ON
   auth.cc_token=cc_cust.token
 LEFT OUTER JOIN
-  `{PROJECT_ID_DW}.prod_merchants_data_product.core_merchants` merch
+  `{PROJECT_ID_DW}.merchants_data_product.core_merchants` merch
 ON
   auth.merchant_id = merch.merchant_id
   where auth.ingest_date='{partition_date}';
@@ -164,8 +164,8 @@ with models.DAG(
         }
     )
 
-    bq_insert_cc_analytics_prod_tbl = bigquery.BigQueryInsertJobOperator(
-        task_id="bq_insert_cc_analytics_prod_tbl",
+    bq_insert_cc_analytics_tbl = bigquery.BigQueryInsertJobOperator(
+        task_id="bq_insert_cc_analytics_tbl",
         impersonation_chain=IMPERSONATION_CHAIN,
         configuration={
             "query": {
@@ -175,4 +175,4 @@ with models.DAG(
         }
     )
     
-    chain(bq_create_cc_analytics_dp_tbl >> bq_insert_cc_analytics_prod_tbl)
+    chain(bq_create_cc_analytics_dp_tbl >> bq_insert_cc_analytics_tbl)

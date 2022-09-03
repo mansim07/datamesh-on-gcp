@@ -19,7 +19,7 @@ partition_date = models.Variable.get('partition_date')
 
 
 CUST_REF_DATA_TABLE = f"""
-CREATE TABLE IF NOT EXISTS `{project_id_dw}.prod_customer_refined_data.{input_tbl_cust}`
+CREATE TABLE IF NOT EXISTS `{project_id_dw}.customer_refined_data.{input_tbl_cust}`
 (
   client_id STRING,
   ssn STRING,
@@ -45,7 +45,7 @@ PARTITION BY ingest_date
         """
 
 CUST_DATA_PRODUCT_TABLE = f"""
-CREATE TABLE IF NOT EXISTS `{project_id_dw}.prod_customer_data_product.customer_data`
+CREATE TABLE IF NOT EXISTS `{project_id_dw}.customer_data_product.customer_data`
 (
   client_id STRING,
   ssn STRING,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `{project_id_dw}.prod_customer_data_product.customer_
         """
 
 CUST_TOKENIZED_DATA_PRODUCT_TABLE = f"""
-CREATE TABLE IF NOT EXISTS  `{project_id_dw}.prod_customer_data_product.tokenized_customer_data`
+CREATE TABLE IF NOT EXISTS  `{project_id_dw}.customer_data_product.tokenized_customer_data`
 (
   client_id BYTES,
   ssn BYTES,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS  `{project_id_dw}.prod_customer_data_product.tokenize
         """
 
 CC_CUST_REF_TABLE = f"""
-CREATE TABLE IF NOT EXISTS  `{project_id_dw}.prod_customer_refined_data.{input_tbl_cc_cust}`
+CREATE TABLE IF NOT EXISTS  `{project_id_dw}.customer_refined_data.{input_tbl_cc_cust}`
   (
   cc_number INT64,
   cc_expiry STRING,
@@ -99,7 +99,7 @@ OPTIONS(
         """
 
 CC_CUST_DATA_PRODUCT_TABLE = f"""
-CREATE TABLE IF NOT EXISTS  `{project_id_dw}.prod_customer_data_product.cc_customer_data`
+CREATE TABLE IF NOT EXISTS  `{project_id_dw}.customer_data_product.cc_customer_data`
 (
   cc_number INT64,
   cc_expiry STRING,
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS  `{project_id_dw}.prod_customer_data_product.cc_custo
 
 CUST_DP_INSERT = f"""
 INSERT INTO
-  `{project_id_dw}.prod_customer_data_product.customer_data`
+  `{project_id_dw}.customer_data_product.customer_data`
 SELECT
   client_id AS client_id,
   ssn AS ssn,
@@ -147,7 +147,7 @@ FROM (
       *,
       ROW_NUMBER() OVER (PARTITION BY client_id, ssn, first_name, last_name, gender, street, city, state, zip, city_pop, job, dob, email, phonenum, profile ORDER BY client_id ) rownum
     FROM
-      `{project_id_dw}.prod_customer_refined_data.{input_tbl_cust}`
+      `{project_id_dw}.customer_refined_data.{input_tbl_cust}`
     WHERE
       ingest_date='{partition_date}' )
   WHERE
@@ -155,7 +155,7 @@ FROM (
     """
 
 CUST_PRIVATE_KEYSET=f"""
-INSERT INTO  `{project_id_dw}.prod_customer_private.customer_keysets`
+INSERT INTO  `{project_id_dw}.customer_private.customer_keysets`
 SELECT 
 client_id as client_id,
   ssn as ssn,
@@ -197,14 +197,14 @@ distinct client_id ,
   profile,
   ingest_date
   from 
-  `{project_id_dw}.prod_customer_refined_data.{input_tbl_cust}` where ingest_date='{partition_date}') cdd
+  `{project_id_dw}.customer_refined_data.{input_tbl_cust}` where ingest_date='{partition_date}') cdd
   ;
 
 
 """
 
 TOKENIZED_CUST_DATA=f"""
-INSERT INTO  `{project_id_dw}.prod_customer_data_product.tokenized_customer_data`
+INSERT INTO  `{project_id_dw}.customer_data_product.tokenized_customer_data`
 SELECT
   AEAD.ENCRYPT(keyset,'dummy_value',cast(client_id as String)) AS client_id,
   AEAD.ENCRYPT(keyset,'dummy_value',cast(ssn  as String)) AS ssn,
@@ -229,11 +229,11 @@ SELECT
       ingest_date as ingest_date
 
 FROM
-`{project_id_dw}.prod_customer_private.customer_keysets` cdk where ingest_date='{partition_date}';
+`{project_id_dw}.customer_private.customer_keysets` cdk where ingest_date='{partition_date}';
 """
 
 CC_CUST_DATA=f"""
-INSERT INTO  `{project_id_dw}.prod_customer_data_product.cc_customer_data`
+INSERT INTO  `{project_id_dw}.customer_data_product.cc_customer_data`
 SELECT 
   cc_number ,
   cc_expiry ,
@@ -244,7 +244,7 @@ SELECT
   token ,
   ingest_date 
   from 
-  `{project_id_dw}.prod_customer_refined_data.{input_tbl_cc_cust}`
+  `{project_id_dw}.customer_refined_data.{input_tbl_cc_cust}`
 where 
 ingest_date='{partition_date}';
 """

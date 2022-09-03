@@ -87,7 +87,7 @@ default_args = {
 
 
 CREATE_DP_AUTH_DATA = f"""
-CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.prod_auth_data_product.auth_table`
+CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.auth_data_product.auth_table`
 (
   cc_token STRING,
   merchant_id STRING,
@@ -119,7 +119,7 @@ PARTITION BY ingest_date;
  
 INSERT_DP_AUTH_DATA = f"""
 INSERT INTO
-  `{PROJECT_ID_DW}.prod_auth_data_product.auth_table`
+  `{PROJECT_ID_DW}.auth_data_product.auth_table`
 SELECT
 cc_token,
 merchant_id,
@@ -146,21 +146,21 @@ merchant_id,
   NULL AS version,
   auth.ingest_date as ingest_date
 FROM
-  `{PROJECT_ID_DW}.prod_pos_auth_refined_data.auth_data` auth
+  `{PROJECT_ID_DW}.pos_auth_refined_data.auth_data` auth
 LEFT OUTER JOIN
-  `{PROJECT_ID_DW}.prod_auth_ref_data.card_read_type` crt
+  `{PROJECT_ID_DW}.auth_ref_data.card_read_type` crt
 ON
   auth.card_read_type = crt.code
 LEFT OUTER JOIN
-  `{PROJECT_ID_DW}.prod_auth_ref_data.payment_methods` pm
+  `{PROJECT_ID_DW}.auth_ref_data.payment_methods` pm
 ON
   pm.pym_type_code=auth.payment_method
 LEFT OUTER JOIN
-  `{PROJECT_ID_DW}.prod_auth_ref_data.trans_type` tt
+  `{PROJECT_ID_DW}.auth_ref_data.trans_type` tt
 ON
   tt.trans_type=auth.trans_type
 LEFT OUTER JOIN
- `{PROJECT_ID_DW}.prod_auth_ref_data.swiped_code` st
+ `{PROJECT_ID_DW}.auth_ref_data.swiped_code` st
 ON
   st.swipe_code=auth.swipe_type
   where auth.ingest_date='{partition_date}';
