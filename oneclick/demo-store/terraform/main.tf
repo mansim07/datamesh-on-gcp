@@ -30,7 +30,7 @@ locals {
   _transactions_ref_bucket_name   = format("%s_%s_transactions_ref_raw_data", local._prefix_first_element, var.rand)
   _merchants_bucket_name          = format("%s_%s_merchants_raw_data", local._prefix_first_element, var.rand)
   _merchants_curated_bucket_name  = format("%s_%s_merchants_curated_data", local._prefix_first_element, var.rand)
-  _dataplex_process_bucket_name   = format("%s_%s__dataplex_process", local._prefix_first_element, var.rand) 
+  _dataplex_process_bucket_name   = format("%s_%s_dataplex_process", local._prefix_first_element, var.rand) 
   _dataplex_bqtemp_bucket_name    = format("%s_%s_dataplex_temp", local._prefix_first_element, var.rand) 
 }
 
@@ -55,7 +55,7 @@ locals {
 
 resource "google_compute_network" "default_network" {
   project                 = var.project_id
-  name                    = "vpc-main"
+  name                    = "default"
   description             = "Default network"
   auto_create_subnetworks = false
   mtu                     = 1460
@@ -69,7 +69,7 @@ resource "google_compute_network" "default_network" {
 
 resource "google_compute_subnetwork" "main_subnet" {
   project       = var.project_id
-  name          = format("%s-misc-subnet", local._prefix)
+  name          = "default"       #format("%s-misc-subnet", local._prefix)
   ip_cidr_range = var.ip_range
   region        = var.location
   network       = google_compute_network.default_network.id
@@ -84,7 +84,7 @@ resource "google_compute_subnetwork" "main_subnet" {
 
 resource "google_compute_firewall" "firewall_rule" {
   project  = var.project_id
-  name     = format("allow-intra-%s-misc-subnet", local._prefix)
+  name     = "allow-intra-default"                    # format("allow-intra-%s-misc-subnet", local._prefix)
   network  = google_compute_network.default_network.id
 
   direction = "INGRESS"
@@ -101,7 +101,7 @@ resource "google_compute_firewall" "firewall_rule" {
 
 resource "google_compute_firewall" "user_firewall_rule" {
   project  = var.project_id
-  name     = format("allow-ingress-from-office-%s", local._prefix)
+  name     = "allow-ingress-from-office-default"  #format("allow-ingress-from-office-%s", local._prefix)
   network  = google_compute_network.default_network.id
 
   direction = "INGRESS"
