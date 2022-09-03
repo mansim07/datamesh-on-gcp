@@ -37,7 +37,9 @@ module "activate_service_apis" {
     "bigquery.googleapis.com", 
     "storage.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "dlp.googleapis.com"
+    "dlp.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com"
     ]
 
   disable_services_on_destroy = false
@@ -66,7 +68,12 @@ module "activate_service_apis_dg" {
     "dataplex.googleapis.com",
     "datacatalog.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "composer.googleapis.com"
+    "composer.googleapis.com",
+    "datapipelines.googleapis.com",
+    "logging.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "dataproc-control.googleapis.com",
+    "monitoring.googleapis.com"
     ]
 
   disable_services_on_destroy = false

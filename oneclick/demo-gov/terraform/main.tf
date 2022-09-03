@@ -32,8 +32,8 @@ locals {
   _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._bucket_prefix)
   _merchants_bucket_name          = format("%s_merchants_raw_data", local._bucket_prefix)
   _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._bucket_prefix)
-  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._bucket_prefix) 
-  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._bucket_prefix) 
+  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._prefix) 
+  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._prefix) 
 }
 
 provider "google" {
@@ -404,8 +404,9 @@ resource "google_storage_bucket" "storage_bucket_bqtemp" {
 resource "google_bigquery_dataset" "bigquery_datasets" {
   for_each = toset([ 
    "central_dlp_data",
-   "central_dq_data",
-   "central_dq_reports"
+   "central_audit_data",
+   "central_dq_results",
+   "enterprise_reference_data"
   ])
   project                     = var.project_id_governance
   dataset_id                  = each.key
@@ -427,7 +428,7 @@ resource "null_resource" "gsutil_resources" {
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id_governance} ${var.location} data_product_classification
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id_governance} ${var.location} data_product_quality
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id_governance} ${var.location} data_product_exchange
-      java -cp demo_artifacts/libs/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateDLPInspectionTemplate ${var.project_id_governance} global marsbank_dlp_template
+      java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateDLPInspectionTemplate ${var.project_id_storage} global marsbank_dlp_template
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }

@@ -114,9 +114,7 @@
 
 ## Lab 9: Tag templates & Bulk Tagging
 
-## Lab 10: Data Lineage 
-
-## Lab 11: Orcehstrate using Composer [Jay]
+## Lab 10: Orcehstrate using Composer [Jay]
 gsutil cp ./dag ./composer 
 
 
