@@ -83,7 +83,9 @@
     pip3 install faker_credit_score
     ```
 
-8. Use Terraform to setup the rest of the environment
+8.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" role assigned.
+
+9. Use Terraform to setup the rest of the environment
 
     ```bash
     cd ~/datamesh-on-gcp/oneclick/
