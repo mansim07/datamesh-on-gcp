@@ -16,6 +16,7 @@
 
 locals {
   _prefix = var.project_id_governance
+  _bucket_prefix = var.project_id_storage
   #_random = var.rand
   _prefix_first_element           =  local._prefix #element(split("-", local._prefix), 0)
   #_prefix_datastore               = element(split("-", var.datastore_project_id), 0)
@@ -24,15 +25,15 @@ locals {
   _sample_data_git_repo           = "https://github.com/anagha-google/dataplex-on-gcp-lab-resources"
   _data_gen_git_repo              = "https://github.com/mansim07/datamesh-datagenerator"
   _metastore_service_name         = "metastore-service"
-  _customers_bucket_name          = format("%s_customers_raw_data", local._prefix_first_element)
-  _customers_curated_bucket_name  = format("%s_customers_curated_data", local._prefix_first_element)
-  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._prefix_first_element)
-  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._prefix_first_element)
-  _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._prefix_first_element)
-  _merchants_bucket_name          = format("%s_merchants_raw_data", local._prefix_first_element)
-  _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._prefix_first_element)
-  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._prefix_first_element) 
-  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._prefix_first_element) 
+  _customers_bucket_name          = format("%s_customers_raw_data", local._bucket_prefix_first_element)
+  _customers_curated_bucket_name  = format("%s_customers_curated_data", local._bucket__prefix_first_element)
+  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._bucket__prefix_first_element)
+  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._bucket__prefix_first_element)
+  _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._bucket__prefix_first_element)
+  _merchants_bucket_name          = format("%s_merchants_raw_data", local._bucket__prefix_first_element)
+  _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._bucket__prefix_first_element)
+  _dataplex_process_bucket_name   = format("%s_dataplex_process", local._bucket__prefix_first_element) 
+  _dataplex_bqtemp_bucket_name    = format("%s_dataplex_temp", local._bucket__prefix_first_element) 
 }
 
 provider "google" {
@@ -437,6 +438,7 @@ resource "null_resource" "gsutil_resources" {
 ####################################################################################
 # Reuseable Modules
 ####################################################################################
+/*
 module "composer" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                        = "./modules/composer"
@@ -449,7 +451,8 @@ module "composer" {
   dataplex_process_bucket_name  = local._dataplex_process_bucket_name
   
   depends_on = [time_sleep.sleep_after_network_and_iam_steps]
-}
+} 
+*/
 
 ####################################################################################
 # Organize the Data
