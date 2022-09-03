@@ -32,6 +32,8 @@ status=$?
 cd ../../demo-gov/terraform
 gcloud config set project ${GCP_DATAGOV_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var rand=${RAND} -var project_id=${GCP_DATAGOV_PROJECT_ID} -var datastore_project_id=${GCP_DATASTORE_PROJECT_ID} -var "org_id=${GCP_ARGOLIS_LDAP}.altostrat.com" -var 'user_ip_range=10.6.0.0/24'
+
+terraform apply -auto-approve -var project_id_governance=${GCP_DATAGOV_PROJECT_ID} -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var ldap=${GCP_ARGOLIS_LDAP} -var user_ip_range=10.6.0.0/24
+
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
