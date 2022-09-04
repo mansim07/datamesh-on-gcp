@@ -156,7 +156,7 @@ resource "null_resource" "register_bq_assets3" {
                      var.location,
                      element(split("/", each.key), 3),
                      element(split("/", each.key), 2),
-                     "projects/${var.datastore_project_id}/datasets/${each.value}",
+                     "projects/${var.project_id}/datasets/${each.value}",
                      element(split("/", each.key), 1),
                      )
   }
