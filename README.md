@@ -96,24 +96,27 @@
 
     ```
 
-## Lab 2: Data Classification using DLP
-
-## Lab 3: Discover Metadata
-
-## Lab 4: Manging Security
+## Lab 2: Manging Data Security
 [Dataplex Security Lab](https://docs.google.com/document/d/1nTxmFyOp7DvNreaDKZ_92u8K-dot6N1fTqkLrlDsSt8/edit#)
 
-## Lab 5: Data Curation
+
+
+## Lab 3: Data Curation
 
 [Data Curation Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
 
-## Lab 6: Data Quality
+## Lab 4: Data Quality
 
 [Data Quality Lab Instructions](https://docs.google.com/document/d/17m6bBAVf51q3tvo7hdjBElac32_t8FR3olZH6vTOYhs/edit#heading=h.10b13csq101)
 
-## Lab 7: Data Refinement & Movement 
+## Lab 5: Data Refinement & Movement 
 
-## Lab 8: Building Data Products
+## Lab 6: Building Data Products
+
+## Lab 7: Data Classification using DLP
+[Data Classification Lab Instructions](https://docs.google.com/document/d/1wpmEYUnb-HV1AaZEhOaP5OPbYzHwf287RsT64ejFWlY/edit?resourcekey=0-kkNXZtUeYPQ6Ws_IIQv9Qw#)
+
+## Lab 8: Discover Metadata
 
 ## Lab 9: Tag templates & Bulk Tagging
 
