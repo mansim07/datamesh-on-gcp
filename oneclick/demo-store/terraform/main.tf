@@ -46,6 +46,9 @@ locals {
   _project_number = data.google_project.project.number
 }
 
+
+
+
 /*
 ####################################################################################
 # Resource for Network Creation                                                    #
