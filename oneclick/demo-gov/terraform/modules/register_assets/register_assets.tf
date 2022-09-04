@@ -145,7 +145,7 @@ resource "null_resource" "register_bq_assets3" {
     
     "dlp-reports/DLP Reports/operations-data-product-zone/central-operations-domain" : "central_dlp_data" ,
     "dq-reports/DQ Reports/operations-data-product-zone/central-operations-domain" : "central_dq_results" ,
-    "audit-data/Audit Data/operations-data-product-zone/central-operations-domain" : "central_dq_results" ,
+    "audit-data/Audit Data/operations-data-product-zone/central-operations-domain" : "central_audit_data" ,
      "enterprise-reference-data/Enterprise Reference Data/operations-data-product-zone/central-operations-domain" : "enterprise_reference_data" ,
 
     
