@@ -126,9 +126,10 @@ gsutil cp ./dag ./composer
 delete the projects 
 
 
+## Post Work 
 
-
-Later: 
-
- - Create multiple personas/roles in CLoud Indentity  and manage persona based security 
+ - Create HMS and attach it to the lake. Follow the instructions here
+ - Create multiple personas/roles in CLoud Indentity and plat around with the security policies 
+ - Become more creative and share ideas 
+ - Don't forget Post-survey and product feedback 
 
