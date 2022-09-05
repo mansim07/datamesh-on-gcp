@@ -432,6 +432,14 @@ resource "null_resource" "gsutil_resources" {
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id_governance} ${var.location} data_product_quality
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateTagTemplates ${var.project_id_governance} ${var.location} data_product_exchange
       java -cp common/tagmanager-1.0-SNAPSHOT.jar  com.google.cloud.dataplex.setup.CreateDLPInspectionTemplate ${var.project_id_storage} global marsbank_dlp_template
+      sed -i s/_project_datagov_/${var.project_id_governance}/g merchant-source-configs/dq_merchant_data_product.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g merchant-source-configs/dq_merchant_gcs_data.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g customer-source-configs/dq_customer_data_product.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g customer-source-configs/dq_customer_gcs_data.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g customer-source-configs/dq_tokenized_customer_data_product.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-source-configs/dq_transactions_data_product.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-source-configs/dq_transactions_gcs_data.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-consumer-configs/dq_cc_analytics_data_product.yaml
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }
