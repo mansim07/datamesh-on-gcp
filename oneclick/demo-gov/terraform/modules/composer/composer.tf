@@ -25,6 +25,12 @@ variable "network_id" {}
 variable "prefix" {}
 variable "dataplex_process_bucket_name" {}
 
+
+locals {
+_dataplex_process_bucket_name   = format("%s_dataplex_process",var.project_id) 
+}
+
+
 ####################################################################################
 # Composer 2
 ####################################################################################
@@ -272,8 +278,8 @@ resource "null_resource" "dag_setup" {
     command = <<-EOT
     export airflow_dag_folder=$(gcloud composer environments describe ${var.project_id}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}')
     export airflow_data_folder=$(gcloud composer environments describe ${var.project_id}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}' | sed -e 's/dags/data/')
-    gsutil mv gs://${var.project_id}_dataplex_process/dags/* ${airflow_dag_folder}/dags/
-    gsutil mv gs://${var.project_id}_dataplex_process/airflow_data/* ${airflow_data_folder}/data/ 
+    gsutil mv gs://${local._dataplex_process_bucket_name}/dags/* ${airflow_dag_folder}
+    gsutil mv gs://${local._dataplex_process_bucket_name}/airflow_data/* ${airflow_data_folder}/
     EOT
     }
     depends_on = [
