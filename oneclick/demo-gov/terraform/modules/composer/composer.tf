@@ -95,7 +95,7 @@ resource "google_project_iam_member" "cloudcomposer_act_as" {
 
 resource "google_composer_environment" "composer_env" {
   project  = var.project_id
-  name     =  var.project_id + "-composer"
+  name     = format("%s-composer", var.project_id) 
   region   = var.location
 
   config {

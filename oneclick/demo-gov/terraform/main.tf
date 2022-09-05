@@ -435,28 +435,12 @@ resource "null_resource" "gsutil_resources" {
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }
-    depends_on = [google_storage_bucket.storage_bucket_process]
+    depends_on = [google_bigquery_dataset.bigquery_datasets]
 
   }
 
-####################################################################################
-# Reuseable Modules
-####################################################################################
-/*
-module "composer" {
-  # Run this as the currently logged in user or the service account (assuming DevOps)
-  source                        = "./modules/composer"
-  location                      = var.location
-  network_id                    = google_compute_network.default_network.id
-  project_id                    = var.project_id_governance
-  datastore_project_id          = var.project_id_storage
-  project_number                = local._project_number
-  prefix                        = local._prefix_first_element
-  dataplex_process_bucket_name  = local._dataplex_process_bucket_name
-  
-  depends_on = [time_sleep.sleep_after_network_and_iam_steps]
-} 
-*/
+
+
 
 ####################################################################################
 # Organize the Data
@@ -470,8 +454,9 @@ module "organize_data" {
   lake_name              = var.lake_name
   project_number         = local._project_number
   datastore_project_id   = var.project_id_storage
-
+   
   #depends_on = [null_resource.dataproc_metastore]
+  depends_on = [null_resource.gsutil_resources]
 
 }
 
@@ -492,9 +477,28 @@ module "register_assets" {
   merchants_curated_bucket_name         = local._merchants_curated_bucket_name
   transactions_curated_bucket_name      = local._transactions_curated_bucket_name
   datastore_project_id                  = var.project_id_storage
+ 
   depends_on = [module.organize_data]
 
 }
+
+####################################################################################
+# Reuseable Modules
+####################################################################################
+
+module "composer" {
+  # Run this as the currently logged in user or the service account (assuming DevOps)
+  source                        = "./modules/composer"
+  location                      = var.location
+  network_id                    = google_compute_network.default_network.id
+  project_id                    = var.project_id_governance
+  datastore_project_id          = var.project_id_storage
+  project_number                = local._project_number
+  prefix                        = local._prefix_first_element
+  dataplex_process_bucket_name  = local._dataplex_process_bucket_name
+  
+  depends_on = [module.register_assets]
+} 
 
 /*
 Data pipelines will be done in composer for initial enablement
