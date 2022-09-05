@@ -93,6 +93,43 @@ resource "google_project_iam_member" "cloudcomposer_act_as" {
   ]
 }
 
+
+
+
+# ActAs role
+resource "google_project_iam_member" "cloudcomposer_admin" {
+  project  = var.project_id
+  role     = "roles/composer.admin"
+  member   = "serviceAccount:${google_service_account.composer_service_account.email}"
+
+  depends_on = [
+    google_project_iam_member.cloudcomposer_act_as
+  ]
+}
+
+
+resource "google_project_iam_member" "cloudcomposer_editorrole" {
+  project  = var.project_id
+  role     = "roles/editor"
+  member   = "serviceAccount:${google_service_account.composer_service_account.email}"
+
+  depends_on = [
+    google_project_iam_member.cloudcomposer_admin
+  ]
+}
+
+resource "google_project_iam_member" "cloudcomposer_tokencreator" {
+  project  = var.project_id
+  role     = "roles/iam.serviceAccountTokenCreator"
+  member   = "serviceAccount:${google_service_account.composer_service_account.email}"
+
+  depends_on = [
+    google_project_iam_member.cloudcomposer_editorrole
+  ]
+}
+
+
+
 resource "google_composer_environment" "composer_env" {
   project  = var.project_id
   name     = format("%s-composer", var.project_id) 
@@ -101,8 +138,14 @@ resource "google_composer_environment" "composer_env" {
   config {
 
     software_config {
-      image_version = "composer-2.0.0-airflow-2.1.4"
+      image_version = "composer-2.0.25-airflow-2.2.5"
       #"composer-2.0.7-airflow-2.2.3"
+
+      pypi_packages = {
+        google-cloud-dataplex = ">=0.1.0"
+        requests_oauth2 = ""
+       # scipy = "==1.1.0"
+      }
 
       env_variables = {
         
