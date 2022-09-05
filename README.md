@@ -147,3 +147,5 @@ Delete both the projects
 #│ ERROR: (gcloud.dataplex.lakes.create) Status code: 429. Quota exceeded for quota metric 'API requests without their own specific quota config' and limit 'API requests without
 #│ their own specific quota config per minute per user per region' of service 'dataplex.googleapis.com' for consumer 'project_number:372712865721'..
 #
+
+#Resolution: Enable a fresh environment
