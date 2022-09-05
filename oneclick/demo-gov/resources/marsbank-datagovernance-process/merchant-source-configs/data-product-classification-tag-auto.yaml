@@ -1,7 +1,7 @@
 dlp_report_config:
-  project_id: "marsbank-datagovernance"
-  dataset_id: "prod_dlp_scan_ds"
-  table_id: "dlp_scan_result_latest_v1"
+  project_id:  _project_datagov_
+  dataset_id: "central_dlp_data"
+  table_id: "dlp_data_profiles_latest_v1"
 is_pii: false
 sensitivity_score: derived
 risk_score: derived

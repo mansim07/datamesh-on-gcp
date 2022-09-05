@@ -45,6 +45,7 @@ TAG_JAR=models.Variable.get('gdc_tag_jar')
 DPLX_TASK_PREFIX="airflow-cust-dqtag"
 TAG_MAIN_CLASS=models.Variable.get('data_quality_main_class')
 
+
 #'https://dataplex.googleapis.com'
 
 
@@ -218,16 +219,6 @@ with models.DAG(
         task_id='end',
         trigger_rule='all_success'
     )
-
-
-
-
-
-
-
-
-
-
 
 
     # Get the table list from main file

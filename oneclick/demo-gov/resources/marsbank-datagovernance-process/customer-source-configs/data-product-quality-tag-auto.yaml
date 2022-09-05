@@ -1,6 +1,6 @@
 dq_report_config:
-  project_id: "marsbank-datagovernance"
-  dataset_id: "prod_dq_check_ds"
+  project_id: _project_datagov_
+  dataset_id: "central_dq_results"
   table_id: "dq_results"
 quality_score: derived
 dq_dashboard: "<a href=\"https://datastudio.google.com/c/u/0/reporting/faf194a4-6388-4df4-b566-99529a152f5c/page/x16FC\">Link to Data Quality Dashboard</a>"
