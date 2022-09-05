@@ -270,10 +270,10 @@ resource "google_composer_environment" "composer_env" {
 resource "null_resource" "dag_setup" {
   provisioner "local-exec" {
     command = <<-EOT
-    export airflow_dag_folder=$(gcloud composer environments describe ${var.project_id_governance}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}')
-    export airflow_data_folder=$(gcloud composer environments describe ${var.project_id_governance}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}' | sed -e 's/dags/data/')
-    gsutil mv gs://${var.project_id_governance}_dataplex_process/dags/* ${airflow_dag_folder}/dags/
-    gsutil mv gs://${var.project_id_governance}_dataplex_process/airflow_data/* ${airflow_data_folder}/data/ 
+    export airflow_dag_folder=$(gcloud composer environments describe ${var.project_id}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}')
+    export airflow_data_folder=$(gcloud composer environments describe ${var.project_id}-composer --location="us-central1" | grep dagGcsPrefix | awk  '{print $2}' | sed -e 's/dags/data/')
+    gsutil mv gs://${var.project_id}_dataplex_process/dags/* ${airflow_dag_folder}/dags/
+    gsutil mv gs://${var.project_id}_dataplex_process/airflow_data/* ${airflow_data_folder}/data/ 
     EOT
     }
     depends_on = [
