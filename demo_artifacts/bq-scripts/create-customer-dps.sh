@@ -1,9 +1,46 @@
 
+#!/bin/bash
+
 source ~/.profile
+
+gcloud config set project ${PROJECT_DATASTO}
+
+ gcloud auth activate-service-account.
 
 export partition_date='2022-05-01'
 
-CREATE TABLE IF NOT EXISTS `${PROJECT_DATASTO}.customer_refined_data.customers_data`
+# --destination_table=myDataset.myTable \
+
+bk mk \
+--table \
+--description "This is a table customer refined data. Native raw from Source. No Data Transformations" \
+'${PROJECT_DATASTO}'.customer_refined_data.customers_data \
+  client_id:STRING,
+  ssn STRING,
+  first_name STRING,
+  last_name STRING,
+  gender STRING,
+  street STRING,
+  city STRING,
+  state STRING,
+  zip INT64,
+  latitude FLOAT64,
+  longitude FLOAT64,
+  city_pop INT64,
+  job STRING, \
+  dob STRING, \
+  email STRING, \
+  phonenum STRING, \
+  profile STRING, \
+  dt STRING, \
+  ingest_date DATE \
+
+
+
+
+bq query --use_legacy_sql=false \
+
+'CREATE TABLE IF NOT EXISTS `'${PROJECT_DATASTO}'.customer_refined_data.customers_data`
 (
   client_id STRING,
   ssn STRING,
@@ -25,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `${PROJECT_DATASTO}.customer_refined_data.customers_d
   dt STRING,
   ingest_date DATE
 )
-PARTITION BY ingest_date
+PARTITION BY ingest_date'
 
 
 CREATE TABLE IF NOT EXISTS `${PROJECT_DATASTO}.customer_data_product.customer_data`
