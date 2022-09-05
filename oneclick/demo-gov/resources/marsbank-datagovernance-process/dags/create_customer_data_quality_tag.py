@@ -219,8 +219,23 @@ with models.DAG(
         trigger_rule='all_success'
     )
 
+
+
+
+
+
+
+
+
+
+
+
     # Get the table list from main file
     all_entities = read_entities_list(ENTITY_LIST_FILE_PATH)
+
+
+
+
 
     for row in all_entities:
 
@@ -233,6 +248,18 @@ with models.DAG(
        # task_id='start_{}'.format(entity),
        # trigger_rule='all_success'
     #)
+
+    # ADD DQ Job Here 
+
+
+
+
+
+    #-----END of DQ Job ---------------
+
+
+    #------BEGIN OF
+
 
         generate_uuid_dq_check = PythonOperator(
             task_id='gen_uuid_dp_info_tag_{}'.format(entity),
