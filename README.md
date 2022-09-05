@@ -109,22 +109,30 @@
 
 ## Lab 5: Data Refinement & Movement 
 
-## Lab 6: Building Data Products
+[Data Refinement & Movement Lab Instructions](https://docs.google.com/document/d/1gGPmolk6JOnDSBYBgYzPOM3t3_6DENnii4GeyyCkCPI/edit?resourcekey=0-O9lOQA4sUt8KQUQSbRostA#)
+
+## Lab 6: Building Data Products in BQ
+[Building DP Lab Instructions](https://docs.google.com/document/d/1f7DsUF5D1nNOC7xNg_SACfx6G1fHa4V5Wy01IKTr6Gw/edit)
 
 ## Lab 7: Data Classification using DLP
 [Data Classification Lab Instructions](https://docs.google.com/document/d/1wpmEYUnb-HV1AaZEhOaP5OPbYzHwf287RsT64ejFWlY/edit?resourcekey=0-kkNXZtUeYPQ6Ws_IIQv9Qw#)
 
-## Lab 8: Discover Metadata
+## Lab 8: Metadata discovery
+[Metadata discovery in Dataplex](https://docs.google.com/document/d/1e5K04nU7rW1I269xN2V0ZN41ycZ12Qnx0xi1RY1AAig/edit?resourcekey=0-LTM7gkGJhbA33I_FumzH6w#heading=h.10b13csq101)
 
 ## Lab 9: Tag templates & Bulk Tagging
 
-## Lab 10: Orcehstrate using Composer [Jay]
-gsutil cp ./dag ./composer 
+[Business Metadata tagging in Dataplex](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
+
+## Lab 10:  Orchestrate using Composer [Jay]
+
+[Business Metadata tagging in Dataplex](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
+
 
 
 ## Clean up 
 
-delete the projects 
+Delete both the projects 
 
 
 ## Post Work 
