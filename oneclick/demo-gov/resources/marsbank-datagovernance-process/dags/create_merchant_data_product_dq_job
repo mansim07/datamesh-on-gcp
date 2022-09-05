@@ -34,33 +34,36 @@ import time
 import json
 import csv
 
+
 # --------------------------------------------------------------------------------
 # Set variables
 # --------------------------------------------------------------------------------
-IMPERSONATION_CHAIN = models.Variable.get('gcp_customer_sa_acct')
+IMPERSONATION_CHAIN = models.Variable.get('gcp_merchants_sa_acct')
 REGION = models.Variable.get('gcp_project_region')
 PROJECT_ID_DW = models.Variable.get('gcp_dw_project')
 PROJECT_ID_DG = models.Variable.get('gcp_dg_project')
-DATAPLEX_REGION = models.Variable.get('customer_dplx_region')
-LAKE_ID = models.Variable.get('customer_dplx_lake_id')
-ZONE_ID = models.Variable.get('customer_dplx_zone_id')
+DATAPLEX_REGION = models.Variable.get('merchant_dplx_region')
+LAKE_ID = models.Variable.get('merchant_dplx_lake_id')
+ZONE_ID = models.Variable.get('merchant_dplx_zone_id')
 DATAPLEX_ENDPOINT = models.Variable.get('dplx_api_end_point')
-ENTITY_LIST_FILE_PATH = models.Variable.get('cust_entity_list_file_path')
+ENTITY_LIST_FILE_PATH = models.Variable.get('merchant_entity_list_file_path')
 TAG_TEMPLATE = models.Variable.get('tag_template_data_product_quality')
-TAG_INPUT_FILE = models.Variable.get('customer_dq_input_file')
-TAG_INPUT_PATH = models.Variable.get('customer_dq_info_input_path')
+TAG_INPUT_FILE = models.Variable.get('merchant_dq_input_file')
+TAG_INPUT_PATH = models.Variable.get('merchant_dq_info_input_path')
 SUB_NETWORK = models.Variable.get('gcp_sub_net')
 TAG_JAR = models.Variable.get('gdc_tag_jar')
-DPLX_TASK_PREFIX = "airflow-cust-dq"
+DPLX_TASK_PREFIX = "airflow-merch-dq"
 TAG_MAIN_CLASS = models.Variable.get('data_quality_main_class')
-INPUT_DQ_YAML = models.Variable.get('customer_dq_dp_input_yaml')
+
+INPUT_DQ_YAML = models.Variable.get('merchant_dq_dp_input_yaml')
 BQ_REGION = models.Variable.get('dq_bq_region')
 GCP_BQ_DATASET_ID = models.Variable.get('dq_dataset_id')
 TARGET_BQ_SUMMARY_TABLE = models.Variable.get('dq_target_summary_table')
 
-input_tbl_cust = models.Variable.get('input_tbl_cust')
-input_tbl_cc_cust = models.Variable.get('input_tbl_cc_cust')
+#input_tbl_cust = models.Variable.get('input_tbl_cust')
+#input_tbl_cc_cust = models.Variable.get('input_tbl_cc_cust')
 partition_date = models.Variable.get('partition_date')
+
 default_args = {
     'owner': 'airflow',
     'start_date': yesterday,
@@ -71,7 +74,6 @@ default_args = {
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=5),
 }
-
 def get_uuid():
     return str(uuid.uuid4())
 
@@ -147,15 +149,15 @@ def _get_dataplex_job_state(**kwargs):
         print(f"Cloud Data Quality tag task status is {task_status}")
     return task_status + "_{}".format(kwargs['entity_val'])
 
-    
+
+
 with models.DAG(
-        'data_governane_dq_customer_data_product_wf',
+        'data_governance_dq_merchant_data_product_wf',
         catchup=False,
         schedule_interval=None,  # datetime.timedelta(days=1),
         default_args=default_args) as dag:
-### Customer Data Product Quality Job 
 
-    pre_task_id = "gen_uuid_dq_job"
+    pre_task_id = "merchant-raw-dq"
 
     start = dummy_operator.DummyOperator(
         task_id='start',
@@ -174,7 +176,7 @@ with models.DAG(
     )
 
     create_dataplex_dq_check_task = DataplexCreateTaskOperator(
-        task_id='customer-dq-check-job',
+        task_id='merchant-dq-check-job',
         project_id=PROJECT_ID_DG,
         region=REGION,
         lake_id=LAKE_ID,
@@ -220,8 +222,6 @@ with models.DAG(
         bash_command="echo 'Job Failed'",
         dag=dag,
     )
-    chain(start  >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end)
 
 
-
-
+    chain(start  >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end )
