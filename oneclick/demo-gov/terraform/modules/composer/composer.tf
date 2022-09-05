@@ -142,7 +142,7 @@ resource "google_composer_environment" "composer_env" {
       #"composer-2.0.7-airflow-2.2.3"
 
       pypi_packages = {
-        google-cloud-dataplex = ">=0.1.0"
+        #google-cloud-dataplex = ">=0.1.0"
         requests_oauth2 = ""
        # scipy = "==1.1.0"
       }
