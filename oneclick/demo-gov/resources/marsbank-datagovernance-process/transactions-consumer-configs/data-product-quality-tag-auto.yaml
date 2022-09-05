@@ -1,5 +1,5 @@
 dq_report_config:
-  project_id: "marsbank-datagovernance"
+  project_id: _project_datagov_
   dataset_id: "prod_dq_check_ds"
   table_id: "dq_results"
 quality_score: derived

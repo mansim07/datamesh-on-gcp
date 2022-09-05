@@ -39,7 +39,7 @@ variable "lake_name" {
 
 variable "date_partition" {
   description = "Date Partition to use for Data Generator Tool"
-  default = "2022-05-"
+  default = "2022-05-01"
 }
 
 variable "tmpdir" {
