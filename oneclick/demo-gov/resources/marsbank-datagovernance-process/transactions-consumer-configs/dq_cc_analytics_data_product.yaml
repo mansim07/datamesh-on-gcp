@@ -1,6 +1,6 @@
 metadata_registry_defaults:
  dataplex:
-   projects: marsbank-datagovernance
+   projects: _project_datagov_
    locations: us-central1
    lakes: prod-transactions-consumer-domain
    zones: data-product-zone
