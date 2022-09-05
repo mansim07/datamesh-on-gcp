@@ -435,7 +435,10 @@ resource "null_resource" "gsutil_resources" {
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }
-    depends_on = [google_bigquery_dataset.bigquery_datasets]
+    depends_on = [
+                  google_bigquery_dataset.bigquery_datasets,
+                  google_storage_bucket.storage_bucket_process,
+                  google_storage_bucket.storage_bucket_bqtemp]
 
   }
 
