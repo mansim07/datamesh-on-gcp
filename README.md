@@ -87,8 +87,7 @@
 
 9. Use Terraform to setup the rest of the environment
 <BR>
-    ```
-    See this [link](https://docs.google.com/presentation/d/1ZsZQjxAGwxWtaULxSBmEt9JlSQ56sZBAmgpdNR2YxVo/edit?resourcekey=0-ZNjhxTU4vJbTGGHRyVTpXw#slide=id.gcba0bf71d3_0_16200) for a presentation on Terrafor setup Instructions
+    See this [link](https://docs.google.com/presentation/d/1ZsZQjxAGwxWtaULxSBmEt9JlSQ56sZBAmgpdNR2YxVo/edit?resourcekey=0-ZNjhxTU4vJbTGGHRyVTpXw#slide=id.gcba0bf71d3_0_16200) for a presentation on Terrafor setup Instructions.
 
     ```bash
     cd ~/datamesh-on-gcp/oneclick/
