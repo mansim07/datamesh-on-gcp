@@ -132,7 +132,7 @@ resource "null_resource" "create_zones_nolabels" {
     "transactions-raw-zone/Authorizations Raw Zone/prod-transactions-source-domain/RAW" : ""
   }
   provisioner "local-exec" {
-    command = format("gcloud dataplex zones --project=%s create %s --location=%s --lake=%s --display-name=\"%s\"  --resource-location-type=SINGLE_REGION --type=%s", 
+    command = format("gcloud dataplex zones --project=%s create %s --location=%s --lake=%s --display-name=\"%s\"  --discovery-enabled --discovery-schedule='0 * * * *' --resource-location-type=SINGLE_REGION --type=%s", 
                      var.project_id,element(split("/", each.key), 0),
                      var.location,
                      element(split("/", each.key), 2),
@@ -157,7 +157,7 @@ resource "null_resource" "create_zones" {
     "transactions-data-product-zone/Authorizations Data Product Zone/prod-transactions-source-domain/CURATED" : "data_product_category=master_data"
   }
   provisioner "local-exec" {
-    command = format("gcloud dataplex zones --project=%s create %s --location=%s --lake=%s --display-name=\"%s\"  --resource-location-type=SINGLE_REGION --type=%s --labels=%s", 
+    command = format("gcloud dataplex zones --project=%s create %s --location=%s --discovery-enabled --discovery-schedule='0 * * * *' --lake=%s --display-name=\"%s\"  --resource-location-type=SINGLE_REGION --type=%s --labels=%s", 
                      var.project_id,element(split("/", each.key), 0),
                      var.location,
                      element(split("/", each.key), 2),
