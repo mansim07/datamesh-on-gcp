@@ -104,7 +104,8 @@ resource "google_project_iam_member" "service_account_owner" {
 "roles/dataplex.editor",
 "roles/dataproc.admin",
 "roles/dataproc.worker",
-"roles/serviceusage.serviceUsageConsumer"
+"roles/serviceusage.serviceUsageConsumer",
+"roles/dataplex.admin"
   ])
   project  = var.project_id_governance
   role     = each.key
