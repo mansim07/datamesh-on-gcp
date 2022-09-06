@@ -60,7 +60,7 @@ with DAG(
 
     externalsensor1 = ExternalTaskSensor(
         task_id='data_governane_dq_customer_data_product_wf',
-        external_dag_id='dag_1',
+        external_dag_id='data_governane_dq_customer_data_product_wf',
         external_task_id=None,  # wait for whole DAG to complete
         check_existence=True,
         timeout=120)
