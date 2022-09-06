@@ -139,10 +139,10 @@ You will learn how to find data using the logical structure and business annotat
 
 ## [Optional] Post Work
 
- - Create HMS and attach it to the lake. Follow the instructions here
- - Create multiple personas/roles in CLoud Indentity and plat around with the security policies 
+ - Create HMS and attach it to the lake. Follow the instructions [here](https://cloud.google.com/dataplex/docs/create-lake#metastore)
+ - Create multiple personas/roles in CLoud Indentity and play around with the security policies 
  - Become more creative and share ideas 
- - Don't forget Post-survey and product feedback 
+ - Don't forget post-survey and feedback 
 
 ## Clean up 
 Please make sure you clean up your environment
