@@ -128,7 +128,7 @@ In this lab, you will learn how to use BigQuery through Composer to populate the
 [Building Data Products Lab Instructions](https://docs.google.com/document/d/1gGPmolk6JOnDSBYBgYzPOM3t3_6DENnii4GeyyCkCPI/edit?resourcekey=0-O9lOQA4sUt8KQUQSbRostA#)
 
 ## Lab 8: Tag templates & Bulk Tagging
-You will learn how to create bulk tags on the Dataplex Data Product entity across domains using Composer in this lab after the Data Products have been acquired as part of the above lab.
+You will learn how to create bulk tags on the Dataplex Data Product entity across domains using Composer in this lab after the Data Products have been acquired as part of the above lab. You will use a custom [metadata tag library](https://github.com/mansim07/datamesh-templates/tree/main/metadata-tagmanager) to create 4 predefined tag templates - Data Classification, Data Quality, Data Exchange and Data product info(Onwership) 
 
 [Business Metadata tagging in Dataplex Lab Instructions](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
 
