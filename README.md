@@ -114,11 +114,14 @@ You will learn how to define and perform Data Quality jobs on raw data in the Da
 
 ## Lab 5: Data Classification using DLP
 You will use DLP Data Profiler in this lab so that it can automatically classify the BQ data, which will then be used by a Dataplex  to provide business tags/annotations.  
+
 [Data Classification Lab Instructions](https://docs.google.com/document/d/1wpmEYUnb-HV1AaZEhOaP5OPbYzHwf287RsT64ejFWlY/edit?resourcekey=0-kkNXZtUeYPQ6Ws_IIQv9Qw#)
 
 
 ## Lab 6: Building Data Products
 In this lab, you will learn how to use BigQuery through Composer to populate the data products using conventional SQL after using [Configuration-driven Dataproc Templates](https://github.com/GoogleCloudPlatform/dataproc-templates) to migrate the data (supports incremental load) from GCS to BQ.
+
+
 [Building Data Products Lab Instructions](https://docs.google.com/document/d/1gGPmolk6JOnDSBYBgYzPOM3t3_6DENnii4GeyyCkCPI/edit?resourcekey=0-O9lOQA4sUt8KQUQSbRostA#)
 
 ## Lab 8: Tag templates & Bulk Tagging
