@@ -194,6 +194,23 @@ resource "google_storage_bucket_object" "gcs_customers_objects" {
   depends_on = [time_sleep.sleep_after_storage]
 }
 
+#Adding empty directory so it can be discovered by Dataplex and does not conflict with BQ 
+
+resource "google_storage_bucket_object" "cc_cust_folder" {
+  name          = format("cc_customers_data/dt=%s",var.date_partition)
+  content       = "Not really a directory, but it's empty."
+  bucket        = var.customers_curated_bucket_name
+  depends_on = [time_sleep.sleep_after_storage]
+}
+
+resource "google_storage_bucket_object" "cust_folder" {
+  name          = format("customers_data/dt=%s",var.date_partition)
+  content       = "Not really a directory, but it's empty."
+  bucket        = var.customers_curated_bucket_name
+  depends_on = [time_sleep.sleep_after_storage]
+}
+
+
 ####################################################################################
 # Create Merchants GCS Objects
 ####################################################################################
@@ -209,6 +226,16 @@ resource "google_storage_bucket_object" "gcs_merchants_objects" {
   depends_on = [time_sleep.sleep_after_storage]
 }
 
+#Adding Empty Directory for Curated to avoid Dataplex entity conflicts
+
+resource "google_storage_bucket_object" "merchant_folder" {
+  name          =  format("merchants_data/date=%s",var.date_partition)
+  content       = "Not really a directory, but it's empty."
+  bucket        = var.merchants_curated_bucket_name
+  depends_on = [time_sleep.sleep_after_storage]
+}
+
+
 ####################################################################################
 # Create Transactions GCS Objects
 ####################################################################################
@@ -222,6 +249,14 @@ resource "google_storage_bucket_object" "gcs_transaction_objects" {
   bucket = var.transactions_bucket_name
   depends_on = [time_sleep.sleep_after_storage]
 }
+
+resource "google_storage_bucket_object" "auth_folder" {
+  name          = format("auth_data/date=%s",var.date_partition)
+  content       = "Not really a directory, but it's empty."
+  bucket        = var.transactions_curated_bucket_name
+  depends_on = [time_sleep.sleep_after_storage]
+}
+
 
 resource "google_storage_bucket_object" "gcs_transaction_refdata_objects" {
   for_each = toset([
@@ -318,6 +353,10 @@ resource "google_bigquery_job" "job" {
                    google_storage_bucket_object.gcs_transaction_objects,
                    google_storage_bucket_object.gcs_customers_objects,
                    google_storage_bucket_object.gcs_merchants_objects,
+                   google_storage_bucket_object.cc_cust_folder,
+                   google_storage_bucket_object.cust_folder,
+                   google_storage_bucket_object.merchant_folder,
+                   google_storage_bucket_object.auth_folder,
                    google_bigquery_dataset.bigquery_datasets
                   ]
   }
