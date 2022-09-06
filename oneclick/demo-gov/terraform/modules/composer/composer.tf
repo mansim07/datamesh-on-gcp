@@ -236,9 +236,9 @@ resource "google_composer_environment" "composer_env" {
     # this is designed to be the smallest cheapest Composer for demo purposes
     workloads_config {
       scheduler {
-        cpu        = 1
-        memory_gb  = 1
-        storage_gb = 1
+        cpu        = 4
+        memory_gb  = 10
+        storage_gb = 10
         count      = 1
       }
       web_server {
