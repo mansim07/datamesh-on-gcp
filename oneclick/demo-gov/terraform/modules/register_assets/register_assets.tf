@@ -90,7 +90,9 @@ resource "null_resource" "register_bq_assets1" {
     "customer-data-product/Customer Data Product/customer-data-product-zone/prod-customer-source-domain" : "customer_data_product",
     "customer-data-product-reference/Customer Reference Data Product/customer-data-product-zone/prod-customer-source-domain" : "customer_ref_data" ,
      "customer-refined-data/Customer Refined Data/customer-curated-zone/prod-customer-source-domain" : "customer_refined_data" ,
-    "merchant-refined-data/Merchant Refined Data/merchant-curated-zone/prod-merchant-source-domain" : "merchants_refined_data"
+    "merchant-refined-data/Merchant Refined Data/merchant-curated-zone/prod-merchant-source-domain" : "merchants_refined_data",
+     "auth-refined-data/Authorization Refined Data/transactions-curated-zone/prod-transactions-source-domain" : "pos_auth_refined_data"
+
     
   }
   provisioner "local-exec" {
