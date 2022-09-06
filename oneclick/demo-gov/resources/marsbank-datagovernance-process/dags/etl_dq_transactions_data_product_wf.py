@@ -64,7 +64,7 @@ TARGET_BQ_SUMMARY_TABLE = models.Variable.get('dq_target_summary_table')
 #input_tbl_cc_cust = models.Variable.get('input_tbl_cc_cust')
 partition_date = models.Variable.get('partition_date')
 
-
+IMPERSONATION_CHAIN_DQ= f"{PROJECT_ID_DG}-admin-sa@{PROJECT_ID_DG}.iam.gserviceaccount.com"
 # --------------------------------------------------------------------------------
 # Set default arguments
 # --------------------------------------------------------------------------------
@@ -281,7 +281,7 @@ with models.DAG(
         body={
                 "trigger_spec": {"type_": 'ON_DEMAND'},
                 "execution_spec": {
-                    "service_account": IMPERSONATION_CHAIN,
+                    "service_account": IMPERSONATION_CHAIN_DQ,
                     "args": {
                         "TASK_ARGS": f"""clouddq-executable.zip, ALL,{INPUT_DQ_YAML}, --gcp_project_id={PROJECT_ID_DG}, --gcp_region_id={BQ_REGION}, --gcp_bq_dataset_id={GCP_BQ_DATASET_ID}, --target_bigquery_summary_table={TARGET_BQ_SUMMARY_TABLE}
                     """
@@ -340,4 +340,6 @@ with models.DAG(
 
     # [END composer_bigquery]
 
-    chain(start >> bq_create_transactions_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_success, dataplex_task_failed] >> end >> bq_insert_transactions_dp_tbl)
+    #chain(start >> bq_create_transactions_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_success, dataplex_task_failed] >> end >> bq_insert_transactions_dp_tbl)
+
+    chain(start >> bq_create_transactions_dp_tbl  >> bq_insert_transactions_dp_tbl >> end)
