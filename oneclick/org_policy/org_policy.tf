@@ -144,7 +144,8 @@ resource "google_project_organization_policy" "bool-policies-dg" {
   for_each = {
     "compute.requireOsLogin" : false,
     "compute.disableSerialPortLogging" : false,
-    "compute.requireShieldedVm" : false
+    "compute.requireShieldedVm" : false,
+    "iam.disableCrossProjectServiceAccountUsage" :false
   }
   project    = var.project_id_governance
   constraint = format("constraints/%s", each.key)

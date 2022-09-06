@@ -161,6 +161,23 @@ resource "google_project_iam_member" "iam_customer_sa" {
 
 }
 
+resource "google_project_iam_member" "iam_customer_sa_storage" {
+  for_each = toset([
+"roles/bigquery.jobUser"
+])
+  project  = var.project_id_storage
+  role     = each.key
+  member   = format("serviceAccount:customer-sa@%s.iam.gserviceaccount.com", var.project_id_governance)
+
+  depends_on = [
+    google_project_iam_member.iam_customer_sa
+  ]
+
+}
+
+
+
+
 resource "google_project_iam_member" "iam_merchant_sa" {
   for_each = toset([
 "roles/iam.serviceAccountUser",
@@ -192,6 +209,23 @@ resource "google_project_iam_member" "iam_merchant_sa" {
     google_service_account.data_service_account
   ]
 }
+
+
+resource "google_project_iam_member" "iam_merchant_sa_storage" {
+  for_each = toset([
+
+"roles/bigquery.jobUser",
+
+])
+  project  = var.project_id_storage
+  role     = each.key
+  member   = format("serviceAccount:merchant-sa@%s.iam.gserviceaccount.com", var.project_id_governance)
+
+  depends_on = [
+    google_project_iam_member.iam_merchant_sa
+  ]
+}
+
 
 resource "google_project_iam_member" "iam_cc_trans_sa" {
   for_each = toset([
@@ -225,6 +259,22 @@ resource "google_project_iam_member" "iam_cc_trans_sa" {
   ]
 }
 
+
+resource "google_project_iam_member" "iam_cc_trans_sa_storage" {
+  for_each = toset([
+
+"roles/bigquery.jobUser",
+])
+  project  = var.project_id_storage
+  role     = each.key
+  member   = format("serviceAccount:cc-trans-sa@%s.iam.gserviceaccount.com", var.project_id_governance)
+
+  depends_on = [
+    google_project_iam_member.iam_cc_trans_sa
+  ]
+}
+
+
 resource "google_project_iam_member" "iam_cc_trans_consumer_sa" {
   for_each = toset([
 "roles/iam.serviceAccountUser",
@@ -256,6 +306,23 @@ resource "google_project_iam_member" "iam_cc_trans_consumer_sa" {
     google_service_account.data_service_account
   ]
 }
+
+
+resource "google_project_iam_member" "iam_cc_trans_consumer_sa_storage" {
+  for_each = toset([
+
+"roles/bigquery.jobUser",
+
+])
+  project  = var.project_id_storage
+  role     = each.key
+  member   = format("serviceAccount:cc-trans-consumer-sa@%s.iam.gserviceaccount.com", var.project_id_governance)
+
+  depends_on = [
+    google_project_iam_member.iam_cc_trans_consumer_sa
+  ]
+}
+
 
 resource "google_service_account_iam_binding" "admin_account_iam" {
   role               = "roles/iam.serviceAccountTokenCreator"
