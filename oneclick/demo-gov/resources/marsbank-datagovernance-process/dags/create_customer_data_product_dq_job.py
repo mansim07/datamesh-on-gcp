@@ -61,6 +61,11 @@ TARGET_BQ_SUMMARY_TABLE = models.Variable.get('dq_target_summary_table')
 input_tbl_cust = models.Variable.get('input_tbl_cust')
 input_tbl_cc_cust = models.Variable.get('input_tbl_cc_cust')
 partition_date = models.Variable.get('partition_date')
+
+yesterday = datetime.datetime.combine(
+    datetime.datetime.today() - datetime.timedelta(1),
+    datetime.datetime.min.time())
+    
 default_args = {
     'owner': 'airflow',
     'start_date': yesterday,
