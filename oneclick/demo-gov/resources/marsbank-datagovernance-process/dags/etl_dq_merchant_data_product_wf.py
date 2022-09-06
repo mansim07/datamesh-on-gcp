@@ -258,61 +258,61 @@ with models.DAG(
         task_id='end',
         trigger_rule='all_done'
     )
-
-    generate_uuid_dq_check = PythonOperator(
-        task_id='{}'.format(pre_task_id),
-        python_callable=get_uuid,
-        trigger_rule='all_success'
-    )
-
-    create_dataplex_dq_check_task = DataplexCreateTaskOperator(
-        task_id='merchant-dq-check-job',
-        project_id=PROJECT_ID_DG,
-        region=REGION,
-        lake_id=LAKE_ID,
-
-        dataplex_task_id=f"{DPLX_TASK_PREFIX}-{{{{ ti.xcom_pull(task_ids='{pre_task_id}', key='return_value') }}}}",
-
-        asynchronous=False,
-        impersonation_chain=IMPERSONATION_CHAIN,
-
-        body={
-                "trigger_spec": {"type_": 'ON_DEMAND'},
-                "execution_spec": {
-                    "service_account": IMPERSONATION_CHAIN,
-                    "args": {
-                        "TASK_ARGS": f"""clouddq-executable.zip, ALL,{INPUT_DQ_YAML}, --gcp_project_id={PROJECT_ID_DG}, --gcp_region_id={BQ_REGION}, --gcp_bq_dataset_id={GCP_BQ_DATASET_ID}, --target_bigquery_summary_table={TARGET_BQ_SUMMARY_TABLE}
-                    """
-                    }
-                },
-            "spark": {
-                    "file_uris": [f"gs://dataplex-clouddq-artifacts-us-central1/clouddq-executable.zip", "gs://dataplex-clouddq-artifacts-us-central1/clouddq-executable.zip.hashsum", f"{INPUT_DQ_YAML}"],
-                    "python_script_file": 'gs://dataplex-clouddq-artifacts-us-central1/clouddq_pyspark_driver.py',
-                    "infrastructure_spec": {"vpc_network": {"sub_network": f"{SUB_NETWORK}"}},
-                    },
-        }
-    )
-
-    dataplex_task_state = BranchPythonOperator(
-        task_id="dataplex_task_state_{}".format(pre_task_id),
-        python_callable=_get_dataplex_job_state,
-        provide_context=True,
-        op_kwargs={
-            'dplx_task_id': f"{DPLX_TASK_PREFIX}-{{{{ ti.xcom_pull(task_ids='{pre_task_id}', key='return_value') }}}}", 'entity_val': f"{pre_task_id}"}
-
-    )
-
-    dataplex_task_success = BashOperator(
-        task_id="SUCCEEDED_{}".format(pre_task_id),
-        bash_command="echo 'Job Completed Successfully'",
-        dag=dag,
-    )
-    dataplex_task_failed = BashOperator(
-        task_id="FAILED_{}".format(pre_task_id),
-        bash_command="echo 'Job Failed'",
-        dag=dag,
-    )
-
+    
+#    generate_uuid_dq_check = PythonOperator(
+#        task_id='{}'.format(pre_task_id),
+#        python_callable=get_uuid,
+#        trigger_rule='all_success'
+#    )
+#
+#    create_dataplex_dq_check_task = DataplexCreateTaskOperator(
+#        task_id='merchant-dq-check-job',
+#        project_id=PROJECT_ID_DG,
+#        region=REGION,
+#        lake_id=LAKE_ID,
+#
+#        dataplex_task_id=f"{DPLX_TASK_PREFIX}-{{{{ ti.xcom_pull(task_ids='{pre_task_id}', key='return_value') }}}}",
+#
+#        asynchronous=False,
+#        impersonation_chain=IMPERSONATION_CHAIN,
+#
+#        body={
+#                "trigger_spec": {"type_": 'ON_DEMAND'},
+#                "execution_spec": {
+#                    "service_account": IMPERSONATION_CHAIN,
+#                    "args": {
+#                        "TASK_ARGS": f"""clouddq-executable.zip, ALL,{INPUT_DQ_YAML}, --gcp_project_id={PROJECT_ID_DG}, --gcp_region_id={BQ_REGION}, --gcp_bq_dataset_id={GCP_BQ_DATASET_ID}, --target_bigquery_summary_table={TARGET_BQ_SUMMARY_TABLE}
+#                    """
+#                    }
+#                },
+#            "spark": {
+#                    "file_uris": [f"gs://dataplex-clouddq-artifacts-us-central1/clouddq-executable.zip", "gs://dataplex-clouddq-artifacts-us-central1/clouddq-executable.zip.hashsum", f"{INPUT_DQ_YAML}"],
+#                    "python_script_file": 'gs://dataplex-clouddq-artifacts-us-central1/clouddq_pyspark_driver.py',
+#                    "infrastructure_spec": {"vpc_network": {"sub_network": f"{SUB_NETWORK}"}},
+#                    },
+#        }
+#    )
+#
+#    dataplex_task_state = BranchPythonOperator(
+#        task_id="dataplex_task_state_{}".format(pre_task_id),
+#        python_callable=_get_dataplex_job_state,
+#        provide_context=True,
+#        op_kwargs={
+#            'dplx_task_id': f"{DPLX_TASK_PREFIX}-{{{{ ti.xcom_pull(task_ids='{pre_task_id}', key='return_value') }}}}", 'entity_val': f"{pre_task_id}"}
+#
+#    )
+#
+#    dataplex_task_success = BashOperator(
+#        task_id="SUCCEEDED_{}".format(pre_task_id),
+#        bash_command="echo 'Job Completed Successfully'",
+#        dag=dag,
+#    )
+#    dataplex_task_failed = BashOperator(
+#        task_id="FAILED_{}".format(pre_task_id),
+#        bash_command="echo 'Job Failed'",
+#        dag=dag,
+#    )
+#
     bq_create_merchant_dp_tbl = bigquery.BigQueryInsertJobOperator(
         task_id="bq_create_merchant_dp_tbl",
         impersonation_chain=IMPERSONATION_CHAIN,
@@ -338,6 +338,6 @@ with models.DAG(
 
     # [END composer_bigquery]
 
-    chain(start >> bq_create_merchant_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_merchant_dp_tbl)
+    #chain(start >> bq_create_merchant_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_merchant_dp_tbl)
 
-    #chain(start >> bq_create_merchant_dp_tbl  >> bq_insert_merchant_dp_tbl >> end)
+    chain(start >> bq_create_merchant_dp_tbl  >> bq_insert_merchant_dp_tbl >> end)
