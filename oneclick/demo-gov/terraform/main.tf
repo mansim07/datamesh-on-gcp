@@ -147,7 +147,8 @@ resource "google_project_iam_member" "iam_customer_sa" {
 "roles/metastore.metadataEditor",
 "roles/metastore.serviceAgent",
 "roles/dataproc.worker",
-"roles/cloudscheduler.jobRunner"
+"roles/cloudscheduler.jobRunner",
+"roles/dataplex.viewer"
 ])
   project  = var.project_id_governance
   role     = each.key
@@ -178,7 +179,8 @@ resource "google_project_iam_member" "iam_merchant_sa" {
 "roles/storage.objectAdmin",
 "roles/dataflow.admin",
 "roles/dataflow.worker",
-"roles/cloudscheduler.jobRunner"
+"roles/cloudscheduler.jobRunner",
+"roles/dataplex.viewer"
 ])
   project  = var.project_id_governance
   role     = each.key
@@ -208,7 +210,8 @@ resource "google_project_iam_member" "iam_cc_trans_sa" {
 "roles/storage.objectAdmin",
 "roles/dataflow.admin",
 "roles/dataflow.worker",
-"roles/cloudscheduler.jobRunner"
+"roles/cloudscheduler.jobRunner",
+"roles/dataplex.viewer"
 ])
   project  = var.project_id_governance
   role     = each.key
@@ -238,7 +241,8 @@ resource "google_project_iam_member" "iam_cc_trans_consumer_sa" {
 "roles/storage.objectAdmin",
 "roles/dataflow.admin",
 "roles/dataflow.worker",
-"roles/cloudscheduler.jobRunner"
+"roles/cloudscheduler.jobRunner",
+"roles/dataplex.viewer"
 ])
   project  = var.project_id_governance
   role     = each.key
