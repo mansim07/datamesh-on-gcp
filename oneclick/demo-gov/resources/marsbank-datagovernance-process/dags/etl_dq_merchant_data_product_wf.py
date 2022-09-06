@@ -110,6 +110,62 @@ CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.merchants_data_product.core_merchant
 );
 """
 
+#INSERT_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
+#INSERT INTO  `{PROJECT_ID_DW}.merchants_data_product.core_merchants`
+#SELECT
+#merchant_id ,
+#  merchant_name ,
+#  merchants.mcc as mcc ,
+#  email ,
+#  street ,
+#  CASE
+#    WHEN merchants.city is null THEN zip.city
+#    ELSE merchants.city 
+#    END
+#    AS city ,
+#  CASE
+#    WHEN merchants.state is null THEN zip.state_name
+#    ELSE merchants.state 
+#    END
+#    AS state,
+#   CASE
+#    WHEN merchants.country is null THEN "USA"
+#    ELSE merchants.country 
+#    END
+#    AS  country ,
+#   CASE
+#    WHEN merchants.zip is null THEN zip.zip_code
+#    ELSE merchants.zip 
+#    END
+#    AS zip ,
+#  latitude ,
+#  longitude ,
+#  owner_id ,
+#  owner_name ,
+#  terminal_ids ,
+#  description ,
+#  market_Segment ,
+#  Industry_Code_Descritption as industry_Code_description ,
+#  industry_Code ,
+#  merchants.ingest_date  as ingest_date
+
+#FROM
+#`{PROJECT_ID_DW}.merchants_refined_data.merchants_data` as merchants,
+#  `bigquery-public-data.geo_us_boundaries.zip_codes` AS zip
+#left outer join 
+# `{PROJECT_ID_DW}.merchants_ref_data.mcc_codes` mcc
+# on 
+# merchants.mcc=mcc.mcc
+# WHERE
+#  ST_WITHIN(ST_GEOGPOINT(merchants.latitude,
+#      merchants.longitude ),
+#    zip.zip_code_geom)
+#    AND 
+#    merchants.ingest_date='{partition_date}';
+#"""
+
+
+
 INSERT_MERCHANT_CORE_DATA_PRODUCT_TABLE = f"""
 INSERT INTO  `{PROJECT_ID_DW}.merchants_data_product.core_merchants`
 SELECT
@@ -119,12 +175,12 @@ merchant_id ,
   email ,
   street ,
   CASE
-    WHEN merchants.city is null THEN zip.city
+    WHEN merchants.city is null THEN NULL
     ELSE merchants.city 
     END
     AS city ,
   CASE
-    WHEN merchants.state is null THEN zip.state_name
+    WHEN merchants.state is null THEN NULL
     ELSE merchants.state 
     END
     AS state,
@@ -134,7 +190,7 @@ merchant_id ,
     END
     AS  country ,
    CASE
-    WHEN merchants.zip is null THEN zip.zip_code
+    WHEN merchants.zip is null THEN NULL
     ELSE merchants.zip 
     END
     AS zip ,
@@ -150,19 +206,19 @@ merchant_id ,
   merchants.ingest_date  as ingest_date
 
 FROM
-`{PROJECT_ID_DW}.merchants_refined_data.merchants_data` as merchants,
-  `bigquery-public-data.geo_us_boundaries.zip_codes` AS zip
+`{PROJECT_ID_DW}.merchants_refined_data.merchants_data` as merchants
+
 left outer join 
- `{PROJECT_ID_DW}.merchants_ref_data.mcc_codes` mcc
+ `{PROJECT_ID_DW}.merchants_ref_data.mcc_code` mcc
  on 
  merchants.mcc=mcc.mcc
  WHERE
-  ST_WITHIN(ST_GEOGPOINT(merchants.latitude,
-      merchants.longitude ),
-    zip.zip_code_geom)
-    AND 
+
     merchants.ingest_date='{partition_date}';
 """
+
+
+
 
 
 def get_uuid():
