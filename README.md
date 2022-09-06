@@ -1,6 +1,6 @@
 # datamesh-on-gcp
 ## Lab 1: Setup the argolis demo environment (~1 hr) 
-1. Navigate to the [Console](https://console.cloud.google.com) in incognitive mode. Ensure that you are logged in as admin@<ldap>.altostrat.com
+1. Navigate to the [Console](https://console.cloud.google.com) in incognitive mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
 
 2. Open Cloud Shell while logged in as admin@.
 
