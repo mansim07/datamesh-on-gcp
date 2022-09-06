@@ -117,18 +117,14 @@
 [Building Data Products Lab Instructions](https://docs.google.com/document/d/1gGPmolk6JOnDSBYBgYzPOM3t3_6DENnii4GeyyCkCPI/edit?resourcekey=0-O9lOQA4sUt8KQUQSbRostA#)
 
 
-## Lab 7: Metadata discovery
-[Metadata discovery in Dataplex](https://docs.google.com/document/d/1e5K04nU7rW1I269xN2V0ZN41ycZ12Qnx0xi1RY1AAig/edit?resourcekey=0-LTM7gkGJhbA33I_FumzH6w#heading=h.10b13csq101)
 
 ## Lab 8: Tag templates & Bulk Tagging
 
 [Business Metadata tagging in Dataplex](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
 
-## Lab 9:  Orchestrate using Composer [Jay]
 
-[Business Metadata tagging in Dataplex](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
-
-
+## Lab 8: Metadata and data discovery
+[Metadata discovery in Dataplex](https://docs.google.com/document/d/1e5K04nU7rW1I269xN2V0ZN41ycZ12Qnx0xi1RY1AAig/edit?resourcekey=0-LTM7gkGJhbA33I_FumzH6w#heading=h.10b13csq101)
 
 ## Clean up 
 

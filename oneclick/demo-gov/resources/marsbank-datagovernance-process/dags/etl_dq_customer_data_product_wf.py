@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.customer_refined_data.customer_keyse
   longitude FLOAT64,
   city_pop INT64,
   job STRING,
-  dob STRING,
+  dob DATE,
   email STRING,
   phonenum STRING,
   keyset BYTES,
