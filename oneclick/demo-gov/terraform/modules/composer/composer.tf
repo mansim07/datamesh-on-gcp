@@ -206,7 +206,7 @@ resource "google_composer_environment" "composer_env" {
         AIRFLOW_VAR_TABLE_LIST_FILE_PATH = "/home/airflow/gcs/data/tablelist.txt",
         AIRFLOW_VAR_TAG_TEMPLATE_DATA_PRODUCT_CLASSIFICATION = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_classification",
         AIRFLOW_VAR_TAG_TEMPLATE_DATA_PRODUCT_EXCHANGE = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_exchange",
-        AIRFLOW_VAR_TAG_TEMPLATE_DATA_PRODUCT_INFO = "projects/${var.project_id}/locations/${var.location}tagTemplates/data_product_information",
+        AIRFLOW_VAR_TAG_TEMPLATE_DATA_PRODUCT_INFO = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_information",
         AIRFLOW_VAR_TAG_TEMPLATE_DATA_PRODUCT_QUALITY = "projects/${var.project_id}/locations/${var.location}/tagTemplates/data_product_quality",
         AIRFLOW_VAR_TRANSACTIONS_DC_INFO_INPUT_PATH = "data-product-classification-tag-auto.yaml",
         AIRFLOW_VAR_TRANSACTIONS_DC_INPUT_FILE = "data-product-classification-tag-auto.yaml",
