@@ -97,51 +97,57 @@
     ```
 
 ## Lab 2: Manging Data Security
-[Dataplex Security Lab](https://docs.google.com/document/d/1nTxmFyOp7DvNreaDKZ_92u8K-dot6N1fTqkLrlDsSt8/edit#)
+Managing DATA Security is the main goal of this lab. You will learn how to design and manage security policies using Dataplex's UI and REST API as part of the lab. The purpose of the lab is to learn how to handle dispersed data security more effectively across data domains.
+
+[Dataplex Security Lab Instructions](https://docs.google.com/document/d/1nTxmFyOp7DvNreaDKZ_92u8K-dot6N1fTqkLrlDsSt8/edit#)
 
 ## Lab 3: Data Curation
+You will discover how to leverage common Dataplex templates to curate raw data and translate it into standardized formats like parquet and Avro in the Data Curation lane. This demonstrates how domain teams may quickly process data in a serverless manner and begin consuming it for testing purposes.  
 
 [Data Curation Instructions](https://docs.google.com/document/d/1RZXgMViqdnaCpqiTVbbj07zOuWgo2nRNcwbdv-Zo1bs/edit?resourcekey=0-VLlLdyURPwx1iJd-Ih-Wfw)
 
 ## Lab 4: Data Quality
+You will learn how to define and perform Data Quality jobs on raw data in the Data Quality lab, evaluate and understand the DQ findings, and construct a dashboard to assess and monitor DQ.
 
 [Data Quality Lab Instructions](https://docs.google.com/document/d/17m6bBAVf51q3tvo7hdjBElac32_t8FR3olZH6vTOYhs/edit#heading=h.10b13csq101)
 
 
 ## Lab 5: Data Classification using DLP
+You will use DLP Data Profiler in this lab so that it can automatically classify the BQ data, which will then be used by a Dataplex  to provide business tags/annotations.  
 [Data Classification Lab Instructions](https://docs.google.com/document/d/1wpmEYUnb-HV1AaZEhOaP5OPbYzHwf287RsT64ejFWlY/edit?resourcekey=0-kkNXZtUeYPQ6Ws_IIQv9Qw#)
 
 
 ## Lab 6: Building Data Products
-
+In this lab, you will learn how to use BigQuery through Composer to populate the data products using conventional SQL after using [Configuration-driven Dataproc Templates](https://github.com/GoogleCloudPlatform/dataproc-templates) to migrate the data (supports incremental load) from GCS to BQ.
 [Building Data Products Lab Instructions](https://docs.google.com/document/d/1gGPmolk6JOnDSBYBgYzPOM3t3_6DENnii4GeyyCkCPI/edit?resourcekey=0-O9lOQA4sUt8KQUQSbRostA#)
 
-
-
 ## Lab 8: Tag templates & Bulk Tagging
+You will learn how to create bulk tags on the Dataplex Data Product entity across domains using Composer in this lab after the Data Products have been acquired as part of the above lab.
 
-[Business Metadata tagging in Dataplex](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
-
-
-## Lab 8: Metadata and data discovery
-[Metadata discovery in Dataplex](https://docs.google.com/document/d/1e5K04nU7rW1I269xN2V0ZN41ycZ12Qnx0xi1RY1AAig/edit?resourcekey=0-LTM7gkGJhbA33I_FumzH6w#heading=h.10b13csq101)
-
-## Clean up 
-
-Delete both the projects 
+[Business Metadata tagging in Dataplex Lab Instructions](https://docs.google.com/document/d/1CLDSniTsJ5IfM2TWA2VpVkYRDCyuerstjCfG8Okljxk/edit?resourcekey=0-X1QDcD1-RxvPoGwx5alsWA#)
 
 
-## Post Work 
+## Lab 9: Metadata and data discovery
+You will learn how to find data using the logical structure and business annotations of Dataplex in this lab. Lineage is not enabled as part of the Lab at the moment, but hopefully we can in the future.
+
+[Metadata discovery in Dataplex Lab Instructions](https://docs.google.com/document/d/1e5K04nU7rW1I269xN2V0ZN41ycZ12Qnx0xi1RY1AAig/edit?resourcekey=0-LTM7gkGJhbA33I_FumzH6w#heading=h.10b13csq101)
+
+
+
+## [Optional] Post Work
 
  - Create HMS and attach it to the lake. Follow the instructions here
  - Create multiple personas/roles in CLoud Indentity and plat around with the security policies 
  - Become more creative and share ideas 
  - Don't forget Post-survey and product feedback 
 
+## Clean up 
+Please make sure you clean up your environment
 
-#Issues: 
-#│ ERROR: (gcloud.dataplex.lakes.create) Status code: 429. Quota exceeded for quota metric 'API requests without their own specific quota config' and limit 'API requests without
-#│ their own specific quota config per minute per user per region' of service 'dataplex.googleapis.com' for consumer 'project_number:372712865721'..
-#
-
-#Resolution: Enable a fresh environment
+ ```bash
+ #Remove lien if any
+gcloud alpha resource-manager liens list --project ${PROJECT_DATAGOV}
+gcloud alpha resource-manager liens delete $lien_id --project ${PROJECT_DATAGOV}
+gcloud projects delete ${PROJECT_DATAGOV}
+gcloud projects delete ${PROJECT_DATAGOV}
+```
