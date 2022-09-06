@@ -279,7 +279,7 @@ with models.DAG(
         body={
                 "trigger_spec": {"type_": 'ON_DEMAND'},
                 "execution_spec": {
-                    "service_account": IMPERSONATION_CHAIN_DQ,
+                    "service_account": IMPERSONATION_CHAIN,
                     "args": {
                         "TASK_ARGS": f"""clouddq-executable.zip, ALL,{INPUT_DQ_YAML}, --gcp_project_id={PROJECT_ID_DG}, --gcp_region_id={BQ_REGION}, --gcp_bq_dataset_id={GCP_BQ_DATASET_ID}, --target_bigquery_summary_table={TARGET_BQ_SUMMARY_TABLE}
                     """
@@ -338,6 +338,6 @@ with models.DAG(
 
     # [END composer_bigquery]
 
-    #chain(start >> bq_create_merchant_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_merchant_dp_tbl)
+    chain(start >> bq_create_merchant_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_merchant_dp_tbl)
 
-    chain(start >> bq_create_merchant_dp_tbl  >> bq_insert_merchant_dp_tbl >> end)
+    #chain(start >> bq_create_merchant_dp_tbl  >> bq_insert_merchant_dp_tbl >> end)

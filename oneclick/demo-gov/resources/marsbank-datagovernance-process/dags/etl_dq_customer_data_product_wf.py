@@ -108,7 +108,31 @@ CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.customer_refined_data.{input_tbl_cus
   dt STRING,
   ingest_date DATE
 )
-PARTITION BY ingest_date
+PARTITION BY ingest_date;
+
+CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.customer_refined_data.customer_keysets`
+(
+  client_id STRING,
+  ssn STRING,
+  first_name STRING,
+  last_name STRING,
+  gender STRING,
+  street STRING,
+  city STRING,
+  state STRING,
+  zip INT64,
+  latitude FLOAT64,
+  longitude FLOAT64,
+  city_pop INT64,
+  job STRING,
+  dob STRING,
+  email STRING,
+  phonenum STRING,
+  keyset BYTES,
+  ingest_date DATE
+)
+PARTITION BY ingest_date;
+
         """
 
 CUST_DATA_PRODUCT_TABLE = f"""
@@ -124,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `{PROJECT_ID_DW}.customer_data_product.customer_data`
   address_with_history ARRAY<STRUCT<status STRING, street STRING, city STRING, state STRING, zip_code INT64, WKT GEOGRAPHY, modify_date INT64>>,
   phone_num ARRAY<STRUCT<primary STRING, secondary INT64, modify_date INT64>>,
   email ARRAY<STRUCT<status STRING, primary STRING, secondary INT64, modify_date INT64>>, 
-  ingest DATE
+  ingest_date DATE
 )
         """
 
@@ -414,7 +438,7 @@ with models.DAG(
         task_id='end',
         trigger_rule='all_done'
     )
-
+    
     generate_uuid_dq_check = PythonOperator(
         task_id='{}'.format(pre_task_id),
         python_callable=get_uuid,
@@ -571,6 +595,6 @@ with models.DAG(
     # [END composer_bigquery]
     
     #Removing DQ due to service Account Issues with GCS and Dataplex Zones
-    #chain(start >> bq_create_customer_ref_tbl >> bq_create_customer_dp_tbl >> bq_create_tokenized_customer_dp_tbl >> bq_create_cc_customer_ref_tbl >> bq_create_cc_customer_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_customer_dp_tbl >> bq_insert_customer_keyset_dp_tbl >> bq_insert_customer_tokenized_dp_tbl >> bq_insert_cc_customer_dp_tbl)
+    chain(start >> bq_create_customer_ref_tbl >> bq_create_customer_dp_tbl >> bq_create_tokenized_customer_dp_tbl >> bq_create_cc_customer_ref_tbl >> bq_create_cc_customer_dp_tbl >> generate_uuid_dq_check >> create_dataplex_dq_check_task >> dataplex_task_state >> [dataplex_task_failed, dataplex_task_success] >> end >> bq_insert_customer_dp_tbl >> bq_insert_customer_keyset_dp_tbl >> bq_insert_customer_tokenized_dp_tbl >> bq_insert_cc_customer_dp_tbl)
 
-    chain(start >>  bq_create_customer_ref_tbl >> bq_create_customer_dp_tbl >> bq_create_tokenized_customer_dp_tbl >> bq_create_cc_customer_ref_tbl >> bq_create_cc_customer_dp_tbl  >>  bq_insert_customer_dp_tbl >> bq_insert_customer_keyset_dp_tbl >> bq_insert_customer_tokenized_dp_tbl >> bq_insert_cc_customer_dp_tbl >> end)
+    #chain(start >>  bq_create_customer_ref_tbl >> bq_create_customer_dp_tbl >> bq_create_tokenized_customer_dp_tbl >> bq_create_cc_customer_ref_tbl >> bq_create_cc_customer_dp_tbl  >>  bq_insert_customer_dp_tbl >> bq_insert_customer_keyset_dp_tbl >> bq_insert_customer_tokenized_dp_tbl >> bq_insert_cc_customer_dp_tbl >> end)
