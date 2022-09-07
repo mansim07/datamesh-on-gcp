@@ -83,7 +83,7 @@
     pip3 install faker_credit_score
     ```
 
-8.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" role assigned.
+8.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" and "Organization Policy Administrator" roles assigned at the Organization Level.
 
 9. Use Terraform to setup the rest of the environment <BR>
     
