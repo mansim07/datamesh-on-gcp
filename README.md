@@ -98,9 +98,19 @@
     bash deploy-helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
 
     ```
+10. Validate the Dataplex are created with the right number of assets. Go to Dataplex… Then Manage…  You should see 5 Lakes as Shown Below
 
-## Lab 2: Manging Data Security
-Managing DATA Security is the main goal of this lab. You will learn how to design and manage security policies using Dataplex's UI and REST API as part of the lab. The purpose of the lab is to learn how to handle dispersed data security more effectively across data domains.
+
+    ![Dataplex Image](/demo_artifacts/imgs/Dataplex-ui.png)
+
+11. Go to Composer… Then Environments…  Click on <your-project-id>-composer link..then click on 'Environment Variables'
+
+    ![Composer Env](/demo_artifacts/imgs/Composer-env.png)
+
+## Lab 2: Manging Data Security[IMPORTANT]
+Managing Data Security is the main goal of this lab. You will learn how to design and manage security policies using Dataplex's UI and REST API as part of the lab. The purpose of the lab is to learn how to handle dispersed data security more effectively across data domains.
+
+**Make sure you run the security lab before moving on to other labs**
 
 [Dataplex Security Lab Instructions](https://docs.google.com/document/d/1nTxmFyOp7DvNreaDKZ_92u8K-dot6N1fTqkLrlDsSt8/edit#)
 
