@@ -157,7 +157,7 @@ Please make sure you clean up your environment
  ```bash
  #Remove lien if any
 gcloud alpha resource-manager liens list --project ${PROJECT_DATAGOV}
-gcloud alpha resource-manager liens delete $lien_id --project ${PROJECT_DATAGOV}
+gcloud alpha resource-manager liens delete <your lien-id from previous step> --project ${PROJECT_DATAGOV}
 gcloud projects delete ${PROJECT_DATAGOV}
 gcloud projects delete ${PROJECT_DATAGOV}
 ```
