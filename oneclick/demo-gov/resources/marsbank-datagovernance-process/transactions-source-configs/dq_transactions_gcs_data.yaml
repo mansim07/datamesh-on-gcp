@@ -172,5 +172,5 @@ rule_bindings:
    row_filter_id: NONE
    rule_ids:
       - NO_DELAYED_INGESTION_DAY_LEVEL:
-          ingestion_date_day: date
+          ingestion_date_day: dt
           elapsed_time_days: 1
