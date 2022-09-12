@@ -572,6 +572,7 @@ module "register_assets" {
   # Run this as the currently logged in user or the service account (assuming DevOps)
   source                                = "./modules/register_assets"
   project_id                            = var.project_id_governance
+  project_number                        = local._project_number
   location                              = var.location
   lake_name                             = var.lake_name
   customers_bucket_name                 = local._customers_bucket_name
