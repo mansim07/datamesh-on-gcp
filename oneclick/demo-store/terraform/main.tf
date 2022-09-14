@@ -25,8 +25,8 @@ locals {
   _metastore_service_name         = "metastore-service"
   _customers_bucket_name          = format("%s_customers_raw_data", local._prefix_first_element)
   _customers_curated_bucket_name  = format("%s_customers_curated_data", local._prefix_first_element)
-  _transactions_bucket_name       = format("%s_trasactions_raw_data", local._prefix_first_element)
-  _transactions_curated_bucket_name  = format("%s_trasactions_curated_data", local._prefix_first_element)
+  _transactions_bucket_name       = format("%s_transactions_raw_data", local._prefix_first_element)
+  _transactions_curated_bucket_name  = format("%s_transactions_curated_data", local._prefix_first_element)
   _transactions_ref_bucket_name   = format("%s_transactions_ref_raw_data", local._prefix_first_element)
   _merchants_bucket_name          = format("%s_merchants_raw_data", local._prefix_first_element)
   _merchants_curated_bucket_name  = format("%s_merchants_curated_data", local._prefix_first_element)
