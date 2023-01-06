@@ -2,38 +2,35 @@
 #set -x
 if [ "$#" -ne 4 ]; then
     echo "Illegal number of parameters"
-    echo "Usage: ./deploy_helper.sh <datastore-projectid> <datagov-projectid> <ldap> <randid>"
+    echo "Usage: ./deploy_helper.sh <project-d> <ldap>"
     echo "Example: ./deploy_helper.sh my-datastore my-datagov jayoleary 123"
     exit 1
 fi
-GCP_DATASTORE_PROJECT_ID=$1
-GCP_DATAGOV_PROJECT_ID=$2
-GCP_ARGOLIS_LDAP=$3
-RAND=$4
+GCP_PROJECT_ID=$1
+GCP_LDAP=$2
 
-echo "${GCP_DATASTORE_PROJECT_ID}"
+echo "${GCP_PROJECT_ID}"
 cd ~/datamesh-on-gcp/oneclick/org_policy
-gcloud config set project ${GCP_DATASTORE_PROJECT_ID}
+gcloud config set project ${GCP_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var project_id_governance=${GCP_DATAGOV_PROJECT_ID}
+terraform apply -auto-approve -var project_id=${GCP_PROJECT_ID} 
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
 
 rm terraform*
 
 cd ~/datamesh-on-gcp/oneclick/demo-store/terraform
-gcloud config set project ${GCP_DATASTORE_PROJECT_ID}
+gcloud config set project ${GCP_PROJECT_ID}
 terraform init
-terraform apply -auto-approve -var project_id=${GCP_DATASTORE_PROJECT_ID}
+terraform apply -auto-approve -var project_id=${GCP_PROJECT_ID}
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1
 
-
 cd ../../demo-gov/terraform
-gcloud config set project ${GCP_DATAGOV_PROJECT_ID}
+gcloud config set project ${GCP_PROJECT_ID}
 terraform init
 
-terraform apply -auto-approve -var project_id_governance=${GCP_DATAGOV_PROJECT_ID} -var project_id_storage=${GCP_DATASTORE_PROJECT_ID} -var ldap=${GCP_ARGOLIS_LDAP} -var user_ip_range=10.6.0.0/24
+terraform apply -auto-approve -var project_id=${GCP_PROJECT_ID}  -var ldap=${GCP_LDAP} -var user_ip_range=10.6.0.0/24
 
 status=$?
 [ $status -eq 0 ] && echo "command successful" || exit 1

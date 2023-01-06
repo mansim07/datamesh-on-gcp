@@ -42,6 +42,7 @@ IMPERSONATION_CHAIN = models.Variable.get('gcp_transactions_sa_acct')
 REGION = models.Variable.get('gcp_project_region')
 PROJECT_ID_DW = models.Variable.get('gcp_dw_project')
 PROJECT_ID_DG = models.Variable.get('gcp_dg_project')
+GCP_DG_NUMBER = models.Variable.get('gcp_dg_number')
 DATAPLEX_REGION = models.Variable.get('transactions_dplx_region')
 LAKE_ID = models.Variable.get('transactions_dplx_lake_id')
 ZONE_ID = models.Variable.get('transactions_dplx_zone_id')
@@ -64,7 +65,7 @@ TARGET_BQ_SUMMARY_TABLE = models.Variable.get('dq_target_summary_table')
 #input_tbl_cc_cust = models.Variable.get('input_tbl_cc_cust')
 partition_date = models.Variable.get('partition_date')
 
-IMPERSONATION_CHAIN_DQ= f"{PROJECT_ID_DG}-admin-sa@{PROJECT_ID_DG}.iam.gserviceaccount.com"
+IMPERSONATION_CHAIN_DQ= f"f{GCP_DG_NUMBER}-admin-sa@{PROJECT_ID_DG}.iam.gserviceaccount.com"
 # --------------------------------------------------------------------------------
 # Set default arguments
 # --------------------------------------------------------------------------------

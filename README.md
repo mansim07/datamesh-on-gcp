@@ -1,48 +1,26 @@
 # datamesh-on-gcp
 ## Lab 1: Setup the argolis demo environment (~1 hr) 
-1. Navigate to the [Console](https://console.cloud.google.com) in incognitive mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
+1. Navigate to the [Console](https://console.cloud.google.com) in incogni mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
 
-2. Open Cloud Shell while logged in as admin@.
+2. Select an existing project or create a new one
 
-3.  Clone this repository in Cloud Shell
+3. Open Cloud Shell
 
-    ```bash
-    git clone https://github.com/mansim07/datamesh-on-gcp
-    ```
-
-4. Set up the environment variables.
-
-    Make sure you run the RAND once and capture the  value 
+4.  Clone this repository in Cloud Shell
 
     ```bash
-    echo $(((RND=RANDOM<<15|RANDOM)))
+    git clone https://github.com/mansim07/datamesh-on-gcp -b single_project
     ```
 
-    Replace the necessary values **before you execute the below 2 commands** 
-    
+5. Set up the environment variables.
+
+ 
     ```bash
-    echo "export RAND_ID=replace-value-from-above" >> ~/.profile
+    echo "export USERNAME=your-email-without-@*.com" >> ~/.profile
+    echo "export PROJECT_ID=$(gcloud config get-value project)"
     ```
 
-    ```bash
-    echo "export USERNAME=your-corp-email-without-@google.com" >> ~/.profile
-    ```
-
-    Copy and execute the below commands. No changes are needed. 
-    ```bash
-
-    source ~/.profile 
-
-    echo "export PROJECT_DATAGOV=mbdatagov-${RAND_ID}" >> ~/.profile
-
-    echo "export PROJECT_DATASTO=mbdatastore-${RAND_ID}" >> ~/.profile
-
-    echo "export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format='value(name)')"  >> ~/.profile
-
-    echo "export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format='value(name)')" >> ~/.profile
-
-    ```
-5. Validate the environment variables 
+6. Validate the environment variables 
 
     ```bash
     cat ~/.profile 
@@ -50,30 +28,6 @@
 
     ![profile](/demo_artifacts/imgs/validate-profile.png)
 
-
-
-6. Create two new projects with the assigned billing account using the below commands: 
-  * Create the projects 
-    ```bash
-    source ~/.profile 
-
-    gcloud projects create ${PROJECT_DATAGOV} \
-    --organization=${ORG_ID}
-
-    gcloud projects create ${PROJECT_DATASTO} \
-    --organization=${ORG_ID}
-
-    ```
-
-* Associate the project with the billing ID.
-    ```bash
-    gcloud beta billing projects link ${PROJECT_DATAGOV} \
-    --billing-account=${BILLING_ID}
-
-    gcloud beta billing projects link ${PROJECT_DATASTO} \
-    --billing-account=${BILLING_ID}
-
-    ```
 
 7.  Install necessary python libraries
      
@@ -95,7 +49,7 @@
 
     source ~/.profile  
 
-    bash deploy-helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
+    bash deploy-helper.sh ${PROJECT_ID} ${USERNAME}
 
     ```
 10. Validate the Dataplex are created with the right number of assets. Go to Dataplex… Then Manage…  You should see 5 Lakes as Shown Below
@@ -156,8 +110,6 @@ Please make sure you clean up your environment
 
  ```bash
  #Remove lien if any
-gcloud alpha resource-manager liens list --project ${PROJECT_DATAGOV}
-gcloud alpha resource-manager liens delete <your lien-id from previous step> --project ${PROJECT_DATAGOV}
-gcloud projects delete ${PROJECT_DATAGOV}
-gcloud projects delete ${PROJECT_DATAGOV}
+gcloud projects delete ${PROJECT_ID}
+gcloud projects delete ${PROJECT_ID}
 ```

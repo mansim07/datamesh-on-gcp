@@ -82,7 +82,7 @@ resource "google_service_account" "composer_service_account" {
 
 # Let composer impersonation the service account that can change org policies (for demo purposes)
 resource "google_service_account_iam_member" "cloudcomposer_service_account_impersonation" {
-  service_account_id ="projects/${var.project_id}/serviceAccounts/${var.project_id}-admin-sa@${var.project_id}.iam.gserviceaccount.com"
+  service_account_id ="projects/${var.project_id}/serviceAccounts/f${var.project_number}-admin-sa@${var.project_id}.iam.gserviceaccount.com"
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:${google_service_account.composer_service_account.email}"
   depends_on         = [ google_service_account.composer_service_account ]
@@ -177,6 +177,7 @@ resource "google_composer_environment" "composer_env" {
         AIRFLOW_VAR_DQ_TARGET_SUMMARY_TABLE = "${var.project_id}.central_dq_results.dq_results",
         AIRFLOW_VAR_GCP_CUSTOMER_SA_ACCT = "customer-sa@${var.project_id}.iam.gserviceaccount.com",
         AIRFLOW_VAR_GCP_DG_PROJECT = "${var.project_id}",
+        AIRFLOW_VAR_GCP_DG_NUMBER = "${var.project_number}",
         AIRFLOW_VAR_GCP_DW_PROJECT = "${var.datastore_project_id}",
         AIRFLOW_VAR_GCP_MERCHANTS_SA_ACCT = "merchant-sa@${var.project_id}.iam.gserviceaccount.com",
         AIRFLOW_VAR_GCP_PROJECT_REGION = "${var.location}",

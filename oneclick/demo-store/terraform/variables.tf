@@ -3,14 +3,6 @@ variable "project_id" {
   description = "project id required"
 }
 
-#variable "org_id" {
-# description = "Organization ID in which project created"
-#}
-
-#variable "rand" {
-#  description = "random number used for creating unique GCS bucket names"
-#}
-
 variable "location" {
  description = "Location/region to be used"
  default = "us-central1"
