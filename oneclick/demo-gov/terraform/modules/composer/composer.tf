@@ -79,15 +79,6 @@ resource "google_service_account" "composer_service_account" {
   display_name = "Service Account for Composer Environment"
 }
 
-
-# Let composer impersonation the service account that can change org policies (for demo purposes)
-resource "google_service_account_iam_member" "cloudcomposer_service_account_impersonation" {
-  service_account_id ="projects/${var.project_id}/serviceAccounts/f${var.project_number}-admin-sa@${var.project_id}.iam.gserviceaccount.com"
-  role               = "roles/iam.serviceAccountTokenCreator"
-  member             = "serviceAccount:${google_service_account.composer_service_account.email}"
-  depends_on         = [ google_service_account.composer_service_account ]
-}
-
 # ActAs role
 resource "google_project_iam_member" "cloudcomposer_act_as" {
   project  = var.project_id
@@ -95,12 +86,9 @@ resource "google_project_iam_member" "cloudcomposer_act_as" {
   member   = "serviceAccount:${google_service_account.composer_service_account.email}"
 
   depends_on = [
-    google_service_account_iam_member.cloudcomposer_service_account_impersonation
+    google_service_account.composer_service_account_impersonation
   ]
 }
-
-
-
 
 # ActAs role
 resource "google_project_iam_member" "cloudcomposer_admin" {
