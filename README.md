@@ -24,17 +24,17 @@
 <BR>
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To get the currently logged in email address, run: 'gcloud auth list as' below: <BR> <BR>
-    <pre>
-    gcloud auth list
+<pre>
+gcloud auth list
  
     Credentialed Accounts
 
     ACTIVE: *
     ACCOUNT: joe.user@jgmail.com
 
-    </pre>
-    <BR>
-    <BR>
+</pre>
+<BR>
+<BR>
     
 
 6. Validate the environment variables 
@@ -61,8 +61,9 @@
     ## dataplex.googleapis.com/lakes in region:us-central1 should be at least 5
     </pre>
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can view these settings at https://console.cloud.google.com/iam-admin/quotas and then enter the filters as shown below:<BR>
-    ![quotas](/demo_artifacts/imgs/quotas.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can view these settings at https://console.cloud.google.com/iam-admin/quotas and then enter the filters as shown below:<BR><BR>
+    
+![quotas](/demo_artifacts/imgs/quotas.png)
 <BR>
 
 9. Use Terraform to setup the rest of the environment <BR>
