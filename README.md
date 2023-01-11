@@ -31,9 +31,11 @@
 
     ACTIVE: *
     ACCOUNT: joe.user@jgmail.com
+
     </pre>
     <BR>
     <BR>
+    
 
 6. Validate the environment variables 
 
