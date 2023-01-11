@@ -1,6 +1,6 @@
 # datamesh-on-gcp
 ## Lab 1: Setup the argolis demo environment (~1 hr) 
-1. Navigate to the [Console](https://console.cloud.google.com) in incogni mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
+1. Navigate to the [Console](https://console.cloud.google.com) 
 
 2. Select an existing project or create a new one
 
@@ -16,9 +16,24 @@
 
  
     ```bash
-    echo "export USERNAME=your-email-without-@*.com" >> ~/.profile
+    echo "export USERNAME=your-email" >> ~/.profile
     echo "export PROJECT_ID=$(gcloud config get-value project)"
     ```
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B> You should use your fully qualified email address (e.g. joe.user@gmail.com)</B>
+<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To get the currently logged in email address, run: 'gcloud auth list as' below: <BR> <BR>
+    <pre>
+    gcloud auth list
+ 
+    Credentialed Accounts
+
+    ACTIVE: *
+    ACCOUNT: joe.user@jgmail.com
+    </pre>
+    <BR>
+    <BR>
 
 6. Validate the environment variables 
 
@@ -37,7 +52,16 @@
     pip3 install faker_credit_score
     ```
 
-8.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" and "Organization Policy Administrator" roles assigned at the Organization Level.
+8.  Make sure you have the appropriate Dataplex quotas for the following: 
+<BR>
+    <pre>
+    ## dataplex.googleapis.com/zones in region:us-central1 should be at least 20
+    ## dataplex.googleapis.com/lakes in region:us-central1 should be at least 5
+    </pre>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can view these settings at https://console.cloud.google.com/iam-admin/quotas and then enter the filters as shown below:<BR>
+    ![quotas](/demo_artifacts/imgs/quotas.png)
+<BR>
 
 9. Use Terraform to setup the rest of the environment <BR>
     
