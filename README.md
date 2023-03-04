@@ -18,13 +18,14 @@
     cd datamesh-on-gcp
     ```
 
-4. Bootstrap environment variables.
+4. Bootstraping environment variables.
 
-    Open the bootstrap-env.sh file and change the USERNAME based on your argolis env 
+    **Open the bootstrap-env.sh file and change the USERNAME based on your argolis env** 
 
-    Once eidted, execute the bootstrap-env.sh script to populate the env variables.
+    Once edited, execute the bootstrap-env.sh script to populate the env variables.
     
-    ```source bootstrap-env.sh
+    ```bash
+    source bootstrap-env.sh
     ```
 
 5.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" and "Organization Policy Administrator" roles assigned at the Organization Level.
