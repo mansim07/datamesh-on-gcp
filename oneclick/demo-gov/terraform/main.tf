@@ -601,6 +601,7 @@ module "analyticshub" {
   source                        = "./modules/analyticshub"
   project_id                    = var.project_id_governance
   datastore_project_id          = var.project_id_storage
+  location                      = var.location
 
   depends_on = [module.register_assets]
 }
@@ -624,6 +625,7 @@ module "composer" {
   depends_on = [module.register_assets]
 } 
 
+/*
 Data pipelines will be done in composer for initial enablement
 ####################################################################################
 # Run the Data Pipelines
@@ -639,7 +641,7 @@ module "process_data" {
   depends_on = [module.register_assets]
 
 }
-
+*/
 
 ########################################################################################
 #NULL RESOURCE FOR DELAY/TIMER/SLEEP                                                   #
