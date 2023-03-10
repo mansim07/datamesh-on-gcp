@@ -605,7 +605,7 @@ module "analyticshub" {
   depends_on = [module.register_assets]
 }
    
-/*
+
 ####################################################################################
 # Reuseable Modules
 ####################################################################################
@@ -639,7 +639,7 @@ module "process_data" {
   depends_on = [module.register_assets]
 
 }
-*/
+
 
 ########################################################################################
 #NULL RESOURCE FOR DELAY/TIMER/SLEEP                                                   #
