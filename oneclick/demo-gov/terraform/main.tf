@@ -592,7 +592,7 @@ module "register_assets" {
   transactions_curated_bucket_name      = local._transactions_curated_bucket_name
   datastore_project_id                  = var.project_id_storage
  
-  depends_on = [module.organize_data]
+  depends_on = [module.analyticshub]
 
 }
 
@@ -603,7 +603,7 @@ module "analyticshub" {
   datastore_project_id          = var.project_id_storage
   location                      = var.location
 
-  depends_on = [module.register_assets]
+  depends_on = [module.organize_data]
 }
    
 
