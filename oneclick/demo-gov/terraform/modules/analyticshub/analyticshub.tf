@@ -29,6 +29,13 @@ resource "google_bigquery_analytics_hub_data_exchange" "listing" {
   description      = "Datagov priv data exchange"
 }
 
+#sometimes we get API rate limit errors for dataplex; add wait until this is resolved.
+resource "time_sleep" "sleep_after_data_exchange" {
+  create_duration = "30s"
+
+  depends_on = [google_bigquery_analytics_hub_data_exchange.listing]
+}
+
 resource "google_bigquery_analytics_hub_listing" "listing1" {
   location         = var.location
   data_exchange_id = google_bigquery_analytics_hub_data_exchange.listing.data_exchange_id
@@ -39,6 +46,7 @@ resource "google_bigquery_analytics_hub_listing" "listing1" {
   bigquery_dataset {
     dataset = google_bigquery_dataset.listing1.id
   }
+  depends_on = [google_bigquery_analytics_hub_data_exchange.listing]
 }
 resource "google_bigquery_analytics_hub_listing" "listing2" {
   location         = var.location
@@ -50,6 +58,7 @@ resource "google_bigquery_analytics_hub_listing" "listing2" {
   bigquery_dataset {
     dataset = google_bigquery_dataset.listing2.id
   }
+  depends_on = [google_bigquery_analytics_hub_data_exchange.listing]
 }
 resource "google_bigquery_analytics_hub_listing" "listing3" {
   location         = var.location
@@ -61,6 +70,8 @@ resource "google_bigquery_analytics_hub_listing" "listing3" {
   bigquery_dataset {
     dataset = google_bigquery_dataset.listing3.id
   }
+  depends_on = [google_bigquery_analytics_hub_data_exchange.listing]
+
 }
 resource "google_bigquery_dataset" "listing1" {
   dataset_id                  = "customer_data_product"
