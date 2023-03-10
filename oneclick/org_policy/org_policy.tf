@@ -74,6 +74,7 @@ module "activate_service_apis_dg" {
     "logging.googleapis.com",
     "cloudscheduler.googleapis.com",
     "monitoring.googleapis.com",
+    "analyticshub.googleapis.com",
     "bigquerydatatransfer.googleapis.com"
     ]
 

@@ -1,5 +1,5 @@
 dlp_report_config:
-  project_id: _project_datagov_
+  project_id: mbdatagov-763108871
   dataset_id: "central_dlp_data"
   table_id: "dlp_data_profiles_latest_v1"
 is_pii: false
