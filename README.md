@@ -1,4 +1,7 @@
 # datamesh-on-gcp
+
+# ** THIS REPO HAS BEEN DEPRECATED. PLEASE USE THE GOOGLE CLOUD OFFICIAL VERSION - [Official link](https://github.com/GoogleCloudPlatform/dataplex-labs/tree/main/data-mesh-banking-labs) **
+
 ## Lab 1: Setup the argolis demo environment (~1 hr) 
 1. Navigate to the [Console](https://console.cloud.google.com) in incognitive mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
 
