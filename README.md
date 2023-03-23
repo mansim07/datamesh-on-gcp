@@ -3,110 +3,51 @@
 # ** THIS REPO HAS BEEN DEPRECATED. PLEASE USE THE GOOGLE CLOUD OFFICIAL VERSION - [Official link](https://github.com/GoogleCloudPlatform/dataplex-labs/tree/main/data-mesh-banking-labs) **
 
 ## Lab 1: Setup the argolis demo environment (~1 hr) 
+
 1. Navigate to the [Console](https://console.cloud.google.com) in incognitive mode. Ensure that you are logged in as admin@your-ldap.altostrat.com
 
 2. Open Cloud Shell while logged in as admin@.
 
+   You would need to create Google Cloud's Application Default Credentials using
+
+    ```bash
+    gcloud auth application-default login
+    ```
+    
 3.  Clone this repository in Cloud Shell
 
     ```bash
-    git clone https://github.com/mansim07/datamesh-on-gcp
+    git clone https://github.com/yadavj2008/datamesh-on-gcp
+    cd datamesh-on-gcp
     ```
 
-4. Set up the environment variables.
+4. Bootstraping environment variables.
 
-    Make sure you run the RAND once and capture the  value 
+    **Open the bootstrap-env.sh file and change the USERNAME based on your argolis env** 
 
-    ```bash
-    echo $(((RND=RANDOM<<15|RANDOM)))
-    ```
-
-    Replace the necessary values **before you execute the below 2 commands** 
+    Once edited, execute the bootstrap-env.sh script to populate the env variables.
     
     ```bash
-    echo "export RAND_ID=replace-value-from-above" >> ~/.profile
+    source bootstrap-env.sh
     ```
 
-    ```bash
-    echo "export USERNAME=your-corp-email-without-@google.com" >> ~/.profile
-    ```
+5.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" and "Organization Policy Administrator" roles assigned at the Organization Level.
 
-    Copy and execute the below commands. No changes are needed. 
-    ```bash
-
-    source ~/.profile 
-
-    echo "export PROJECT_DATAGOV=mbdatagov-${RAND_ID}" >> ~/.profile
-
-    echo "export PROJECT_DATASTO=mbdatastore-${RAND_ID}" >> ~/.profile
-
-    echo "export ORG_ID=$(gcloud organizations list --filter="displayName~${USERNAME}" --format='value(name)')"  >> ~/.profile
-
-    echo "export BILLING_ID=$(gcloud beta billing accounts list --filter="displayName~${USERNAME}" --format='value(name)')" >> ~/.profile
-
-    ```
-5. Validate the environment variables 
-
-    ```bash
-    cat ~/.profile 
-    ```
-
-    ![profile](/demo_artifacts/imgs/validate-profile.png)
-
-
-
-6. Create two new projects with the assigned billing account using the below commands: 
-  * Create the projects 
-    ```bash
-    source ~/.profile 
-
-    gcloud projects create ${PROJECT_DATAGOV} \
-    --organization=${ORG_ID}
-
-    gcloud projects create ${PROJECT_DATASTO} \
-    --organization=${ORG_ID}
-
-    ```
-
-* Associate the project with the billing ID.
-    ```bash
-    gcloud beta billing projects link ${PROJECT_DATAGOV} \
-    --billing-account=${BILLING_ID}
-
-    gcloud beta billing projects link ${PROJECT_DATASTO} \
-    --billing-account=${BILLING_ID}
-
-    ```
-
-7.  Install necessary python libraries
-     
-     ```bash
-    pip3 install google-cloud-storage
-    pip3 install numpy
-    pip3 install faker_credit_score
-    ```
-
-8.  Make sure your admin@&lt;ldap&gt;.altostrat.com account has the "Organization Administrator" and "Organization Policy Administrator" roles assigned at the Organization Level.
-
-9. Use Terraform to setup the rest of the environment <BR>
+6. Deploy the demo using deploy-helper.sh script( NOTE: all required env variables already been set by bootstrap-env.sh script in previous step)
     
-    [Optional - Use Terraform Setup Instructions](https://docs.google.com/presentation/d/1ZsZQjxAGwxWtaULxSBmEt9JlSQ56sZBAmgpdNR2YxVo/edit)
-
 
     ```bash
     cd ~/datamesh-on-gcp/oneclick/
-
-    source ~/.profile  
-
+    echo $PROJECT_DATASTO $PROJECT_DATAGOV $USERNAME $RAND_ID
     bash deploy-helper.sh ${PROJECT_DATASTO} ${PROJECT_DATAGOV} ${USERNAME} ${RAND_ID}
 
     ```
-10. Validate the Dataplex are created with the right number of assets. Go to Dataplex… Then Manage…  You should see 5 Lakes as Shown Below
+7. Validate the Dataplex are created with the right number of assets. Go to Dataplex… Then Manage…  You should see 5 Lakes as Shown Below
 
 
     ![Dataplex Image](/demo_artifacts/imgs/Dataplex-ui.png)
 
-11. Go to Composer… Then Environments…  Click on <your-project-id>-composer link..then click on 'Environment Variables'
+8. Go to Composer… Then Environments…  Click on <your-project-id>-composer link..then click on 'Environment Variables'
 
     ![Composer Env](/demo_artifacts/imgs/Composer-env.png)
 

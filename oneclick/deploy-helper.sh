@@ -11,6 +11,14 @@ GCP_DATAGOV_PROJECT_ID=$2
 GCP_ARGOLIS_LDAP=$3
 RAND=$4
 
+echo "Creating projects"
+
+cd ~/datamesh-on-gcp/oneclick/create_projs
+terraform init
+terraform apply -auto-approve
+status=$?
+[ $status -eq 0 ] && echo "projects created successfully" || exit 1
+
 echo "${GCP_DATASTORE_PROJECT_ID}"
 cd ~/datamesh-on-gcp/oneclick/org_policy
 gcloud config set project ${GCP_DATASTORE_PROJECT_ID}

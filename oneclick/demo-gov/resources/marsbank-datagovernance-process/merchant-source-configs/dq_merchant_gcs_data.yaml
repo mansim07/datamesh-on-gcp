@@ -189,7 +189,7 @@ rule_bindings:
     row_filter_id: NONE
     rule_ids:
       - NO_REFERENTIAL_INTEGRITY_VIOLATION_IN_OPERATOR:
-          ref_data_project: _project_datasto_
+          ref_data_project: mbdatasto-763108871
           ref_data_dataset: merchants_ref_data
           ref_data_table_id: mcc_code
           ref_data_column_id: mcc

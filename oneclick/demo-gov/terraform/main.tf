@@ -534,6 +534,14 @@ resource "null_resource" "gsutil_resources" {
       sed -i s/_project_datagov_/${var.project_id_governance}/g customer-source-configs/data-product-quality-tag-auto.yaml
       sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-source-configs/data-product-quality-tag-auto.yaml
       sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-consumer-configs/data-product-quality-tag-auto.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-source-configs/data-product-exchange-tag-manual.yaml 
+      sed -i s/_project_datagov_/${var.project_id_governance}/g transactions-consumer-configs/data-product-exchange-tag-manual.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g customer-source-configs/data-product-exchange-tag-manual.yaml
+      sed -i s/_project_datagov_/${var.project_id_governance}/g merchant-source-configs/data-product-exchange-tag-manual.yaml
+      sed -i s/_locations_/${var.location}/g transactions-source-configs/data-product-exchange-tag-manual.yaml 
+      sed -i s/_locations_/${var.location}/g transactions-consumer-configs/data-product-exchange-tag-manual.yaml
+      sed -i s/_locations_/${var.location}/g customer-source-configs/data-product-exchange-tag-manual.yaml
+      sed -i s/_locations_/${var.location}/g merchant-source-configs/data-product-exchange-tag-manual.yaml
       gsutil -m cp -r * gs://${local._dataplex_process_bucket_name}
     EOT
     }
@@ -584,9 +592,20 @@ module "register_assets" {
   transactions_curated_bucket_name      = local._transactions_curated_bucket_name
   datastore_project_id                  = var.project_id_storage
  
-  depends_on = [module.organize_data]
+  depends_on = [module.analyticshub]
 
 }
+
+module "analyticshub" {
+  # Run this as the currently logged in user or the service account (assuming DevOps)
+  source                        = "./modules/analyticshub"
+  project_id                    = var.project_id_governance
+  datastore_project_id          = var.project_id_storage
+  location                      = var.location
+
+  depends_on = [module.organize_data]
+}
+   
 
 ####################################################################################
 # Reuseable Modules
